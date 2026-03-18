@@ -5,7 +5,6 @@ import './ThemeTransition.css'
 
 export default function useThemeTransition(onMidpoint) {
   const veilRef = useRef(null)
-  const orbRef = useRef(null)
   const animatingRef = useRef(false)
   const reducedMotion = usePrefersReducedMotion()
 
@@ -19,62 +18,28 @@ export default function useThemeTransition(onMidpoint) {
 
     animatingRef.current = true
 
-    const transitionTargets = [veilRef.current, orbRef.current].filter(Boolean)
+    // Dark → light: white overexposure flash. Light → dark: black shutter flash.
+    const currentTheme = document.documentElement.dataset.theme
+    const flashColor = currentTheme === 'dark' ? '#ffffff' : '#0a0a0a'
+
+    const veil = veilRef.current
+    veil.style.background = flashColor
+
     const tl = gsap.timeline({
       onComplete: () => {
         animatingRef.current = false
+        veil.style.background = ''
       },
     })
 
-    tl.set(transitionTargets, { display: 'block' })
-      .set(veilRef.current, {
-        opacity: 0,
-        '--theme-blur': '0px',
-      })
-      .set(orbRef.current, {
-        opacity: 0,
-        scale: 0.08,
-        transformOrigin: '50% 50%',
-      })
-      .to(veilRef.current, {
-        opacity: 1,
-        '--theme-blur': '16px',
-        duration: 0.22,
-        ease: 'power2.out',
-      }, 0)
-      .to(orbRef.current, {
-        opacity: 1,
-        scale: 0.2,
-        duration: 0.22,
-        ease: 'power2.out',
-      })
-      .to(orbRef.current, {
-        scale: 1,
-        duration: 0.52,
-        ease: 'power4.inOut',
-      }, 0.08)
-      .call(() => onMidpoint?.(), null, 0.3)
-      .to(veilRef.current, {
-        opacity: 0,
-        '--theme-blur': '0px',
-        duration: 0.46,
-        ease: 'power2.inOut',
-      }, 0.34)
-      .to(orbRef.current, {
-        opacity: 0,
-        scale: 1.08,
-        duration: 0.44,
-        ease: 'power3.out',
-      }, 0.34)
-      .set(transitionTargets, { display: 'none' })
+    tl.set(veil, { display: 'block', opacity: 0 })
+      .to(veil, { opacity: 1, duration: 0.1, ease: 'power1.in' })
+      .call(() => onMidpoint?.())
+      .to(veil, { opacity: 0, duration: 0.18, ease: 'power1.out' })
+      .set(veil, { display: 'none' })
   }, [onMidpoint, reducedMotion])
 
-  const curtain = (
-    <>
-      <div ref={veilRef} className="theme-veil" aria-hidden="true" />
-      <div ref={orbRef} className="theme-orb" aria-hidden="true" />
-    </>
-  )
+  const curtain = <div ref={veilRef} className="theme-veil" aria-hidden="true" />
 
   return { curtain, play }
 }

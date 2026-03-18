@@ -1,38 +1,14 @@
-.theme-veil,
-.theme-orb {
+.theme-veil {
   position: fixed;
+  inset: 0;
   z-index: 9999;
   display: none;
   pointer-events: none;
+  will-change: opacity;
 }
 
-.theme-veil {
-  inset: 0;
-  --theme-blur: 0px;
-  opacity: 0;
-  will-change: opacity, backdrop-filter;
-  background: color-mix(in srgb, var(--curtain) 20%, transparent);
-  backdrop-filter: blur(var(--theme-blur)) saturate(1.04);
-}
-
-.theme-orb {
-  top: 50%;
-  left: 50%;
-  width: 180vmax;
-  height: 180vmax;
-  opacity: 0;
-  border-radius: 50%;
-  will-change: transform, opacity, filter;
-  transform: translate(-50%, -50%) scale(0.08);
-  background:
-    radial-gradient(circle,
-      color-mix(in srgb, var(--curtain) 98%, transparent) 0%,
-      color-mix(in srgb, var(--curtain) 92%, transparent) 18%,
-      color-mix(in srgb, var(--curtain) 78%, transparent) 36%,
-      color-mix(in srgb, var(--curtain) 36%, transparent) 56%,
-      transparent 74%);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--text) 9%, transparent),
-    0 0 140px color-mix(in srgb, var(--text) 10%, transparent);
-  filter: blur(14px);
+@media (prefers-reduced-motion: reduce) {
+  .theme-veil {
+    will-change: auto;
+  }
 }

@@ -6,8 +6,6 @@ import './PageTransition.css'
 
 export default function PageTransition({ children }) {
   const stageRef = useRef(null)
-  const wipeRef = useRef(null)
-  const sheenRef = useRef(null)
   const location = useLocation()
   const isFirstRender = useRef(true)
   const reducedMotion = usePrefersReducedMotion()
@@ -23,38 +21,19 @@ export default function PageTransition({ children }) {
       return
     }
 
-    const overlayRefs = [wipeRef.current, sheenRef.current].filter(Boolean)
-    const tl = gsap.timeline()
+    window.scrollTo(0, 0)
 
-    tl.set(overlayRefs, { xPercent: 0, display: 'block' })
-      .set(stageRef.current, { x: 34, opacity: 0.72 })
-      .call(() => window.scrollTo(0, 0))
-      .to(stageRef.current, {
-        x: 0,
-        opacity: 1,
-        duration: 0.58,
-        ease: 'power3.out',
-      }, 0.08)
-      .to(wipeRef.current, {
-        xPercent: -100,
-        duration: 0.38,
-        ease: 'power4.inOut',
-      }, 0)
-      .to(sheenRef.current, {
-        xPercent: -120,
-        duration: 0.46,
-        ease: 'power4.inOut',
-      }, 0.02)
-      .set(overlayRefs, { display: 'none' })
+    // Content itself sweeps in left-to-right like a film frame advancing
+    gsap.fromTo(
+      stageRef.current,
+      { clipPath: 'inset(0 100% 0 0)' },
+      { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'expo.out' },
+    )
   }, [location.pathname, reducedMotion])
 
   return (
-    <>
-      <div ref={stageRef} className="page-stage" data-route={location.pathname}>
-        {children}
-      </div>
-      <div ref={wipeRef} className="page-wipe" aria-hidden="true" />
-      <div ref={sheenRef} className="page-sheen" aria-hidden="true" />
-    </>
+    <div ref={stageRef} className="page-stage" data-route={location.pathname}>
+      {children}
+    </div>
   )
 }

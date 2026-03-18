@@ -4,11 +4,11 @@ import gsap from 'gsap'
 import { siteContent } from '../../data/siteContent'
 import TextSwap from '../TextSwap/TextSwap'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
+import { useThemeContext } from '../../contexts/ThemeContext'
 import './Nav.css'
 
-const noop = () => {}
-
-export default function Nav({ theme = 'dark', toggleTheme = noop }) {
+export default function Nav() {
+  const { theme, toggleTheme } = useThemeContext()
   const mobileRef = useRef(null)
   const menuButtonRef = useRef(null)
   const previousFocusRef = useRef(null)
@@ -272,7 +272,7 @@ export default function Nav({ theme = 'dark', toggleTheme = noop }) {
               href={siteContent.brand.whatsappHref}
               className="nav__mobile-cta"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               onClick={closeMenu}
             >
               WhatsApp

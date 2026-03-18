@@ -1,45 +1,9 @@
 .page-stage {
-  will-change: transform, opacity;
+  will-change: clip-path;
 }
 
-.page-wipe,
-.page-sheen {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  display: none;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.page-wipe {
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      color-mix(in srgb, var(--curtain) 24%, transparent) 10%,
-      color-mix(in srgb, var(--curtain) 84%, transparent) 32%,
-      var(--curtain) 54%,
-      color-mix(in srgb, var(--curtain) 72%, transparent) 82%,
-      transparent 100%
-    );
-  backdrop-filter: blur(14px) saturate(1.1);
-}
-
-.page-sheen {
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      color-mix(in srgb, #ffffff 14%, transparent) 24%,
-      color-mix(in srgb, #ffffff 6%, transparent) 42%,
-      transparent 68%
-    );
-  opacity: 0.42;
-  mix-blend-mode: screen;
-}
-
-[data-theme="light"] .page-sheen {
-  mix-blend-mode: multiply;
-  opacity: 0.12;
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .page-stage {
+    will-change: auto;
+  }
 }
