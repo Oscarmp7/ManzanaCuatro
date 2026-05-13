@@ -50,7 +50,7 @@
 .projects-showcase__filter {
   display: inline-flex;
   align-items: center;
-  min-height: 2rem;
+  min-height: 2.75rem;
   padding: 0.28rem 0.9rem;
   border: 1px solid transparent;
   border-radius: 999px;
@@ -183,7 +183,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(47, 120, 255, 0.88);
+  color: color-mix(in srgb, var(--accent) 88%, transparent);
   margin-bottom: 0.6rem;
 }
 
@@ -254,15 +254,12 @@
   background: transparent;
   border: none;
   white-space: nowrap;
-  transition:
-    color 0.22s var(--ease-out),
-    gap 0.22s var(--ease-out);
+  transition: color 0.22s var(--ease-out);
 }
 
 .projects-showcase__case-link--cta:hover,
 .projects-showcase__case-link--cta:focus-visible {
   color: var(--text);
-  gap: 0.82rem;
 }
 
 .projects-showcase__case-cta-icon {

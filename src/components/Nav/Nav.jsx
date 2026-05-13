@@ -176,7 +176,7 @@ export default function Nav() {
       <header className={navClassName}>
         <div className="nav__inner">
           <div className="nav__desktop-shell">
-            <nav className="nav__grid" aria-label="Navegacion principal">
+            <nav className="nav__grid" aria-label="Navegación principal">
               {desktopLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -254,6 +254,7 @@ export default function Nav() {
                 to={link.href}
                 className="nav__mobile-link"
                 onClick={closeMenu}
+                aria-current={isLinkActive(link.href) ? 'page' : undefined}
               >
                 {link.label}
               </Link>

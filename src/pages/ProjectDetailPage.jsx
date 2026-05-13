@@ -6,7 +6,6 @@ import { showcaseProjects, siteContent } from '../data/siteContent'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import './ProjectDetailPage.css'
 
-gsap.registerPlugin(ScrollTrigger)
 
 export default function ProjectDetailPage() {
   const { slug } = useParams()
@@ -200,13 +199,13 @@ export default function ProjectDetailPage() {
             className="project-detail__nav-link project-detail__nav-link--prev"
             to={`/proyectos/${prevProject.slug}`}
           >
-            ← {prevProject.title}
+            <span aria-hidden="true">←</span> {prevProject.title}
           </Link>
           <Link
             className="project-detail__nav-link project-detail__nav-link--next"
             to={`/proyectos/${nextProject.slug}`}
           >
-            {nextProject.title} →
+            {nextProject.title} <span aria-hidden="true">→</span>
           </Link>
         </nav>
       </div>

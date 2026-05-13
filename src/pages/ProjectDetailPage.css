@@ -16,7 +16,6 @@
   height: 60vh;
   object-fit: cover;
   display: block;
-  will-change: transform;
 }
 
 .project-detail__hero-overlay {
@@ -25,7 +24,7 @@
   background: linear-gradient(
     to bottom,
     transparent 40%,
-    rgba(0, 0, 0, 0.7) 100%
+    color-mix(in srgb, #000 70%, transparent) 100%
   );
   pointer-events: none;
 }

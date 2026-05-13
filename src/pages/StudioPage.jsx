@@ -6,8 +6,6 @@ import { siteContent } from '../data/siteContent'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import './StudioPage.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 export default function StudioPage() {
   const sectionRef = useRef(null)
   const aboutImageRef = useRef(null)
