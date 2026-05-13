@@ -29,7 +29,7 @@ export default function Loader({ onComplete }) {
       .to(loaderRef.current, {
         opacity: 0,
         duration: 1.05,
-        ease: 'power2.out',
+        ease: 'expo.out',
       })
 
     return () => tl.kill()

@@ -28,7 +28,7 @@
   height: 100vh;
   height: 100dvh;
   overflow: clip;
-  background: #000;
+  background: var(--bg);
 }
 
 .home-reel__viewport {

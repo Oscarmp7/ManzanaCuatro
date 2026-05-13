@@ -52,7 +52,7 @@ export default function ContactPage() {
         {
           yPercent: 0,
           duration: 0.5,
-          ease: 'power3.out',
+          ease: 'expo.out',
         }
       )
 
@@ -65,7 +65,7 @@ export default function ContactPage() {
           y: 0,
           duration: 0.5,
           stagger: 0.1,
-          ease: 'power3.out',
+          ease: 'expo.out',
           delay: 0.25,
         }
       )
@@ -79,7 +79,7 @@ export default function ContactPage() {
           y: 0,
           duration: 0.45,
           stagger: 0.08,
-          ease: 'power3.out',
+          ease: 'expo.out',
           scrollTrigger: {
             trigger: section.querySelector('.contact__grid'),
             start: 'top 85%',

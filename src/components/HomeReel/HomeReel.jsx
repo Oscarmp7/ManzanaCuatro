@@ -98,7 +98,7 @@ export default function HomeReel({ ready = true }) {
       return
     }
 
-    gsap.fromTo(hint, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8, delay: 0.6, ease: 'power2.out' })
+    gsap.fromTo(hint, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8, delay: 0.6, ease: 'expo.out' })
 
     const handleScroll = () => {
       if (window.scrollY > 0) {

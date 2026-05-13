@@ -69,7 +69,7 @@ export default function Nav() {
         y: 30,
         stagger: 0.05,
         duration: 0.4,
-        ease: 'power3.out',
+        ease: 'expo.out',
       })
     }, mobileRef)
 

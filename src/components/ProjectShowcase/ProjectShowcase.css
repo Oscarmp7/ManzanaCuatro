@@ -272,7 +272,8 @@
   width: 1.3rem;
   height: 1px;
   background: currentColor;
-  transition: width 0.22s var(--ease-out);
+  transition: transform 0.22s var(--ease-out);
+  transform-origin: left center;
 }
 
 .projects-showcase__case-cta-icon::after {
@@ -289,7 +290,7 @@
 
 .projects-showcase__case-link--cta:hover .projects-showcase__case-cta-icon,
 .projects-showcase__case-link--cta:focus-visible .projects-showcase__case-cta-icon {
-  width: 1.7rem;
+  transform: scaleX(1.31);
 }
 
 /* --------------------------------------------------------------- 960px */

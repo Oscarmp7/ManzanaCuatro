@@ -47,13 +47,13 @@ export default function ProjectDetailPage() {
       if (titleRef.current && heroImgRef.current) {
         const titleInner = titleRef.current.querySelector('.project-detail__title-inner')
         const revealTitle = () => {
-          gsap.from(titleInner, { yPercent: 100, duration: 0.8, ease: 'power3.out' })
+          gsap.from(titleInner, { yPercent: 100, duration: 0.8, ease: 'expo.out' })
           if (metaRef.current) {
             gsap.from(metaRef.current, {
               opacity: 0,
               y: 10,
               duration: 0.6,
-              ease: 'power2.out',
+              ease: 'expo.out',
               delay: 0.3,
             })
           }
@@ -72,7 +72,7 @@ export default function ProjectDetailPage() {
           y: 15,
           duration: 0.5,
           stagger: 0.1,
-          ease: 'power2.out',
+          ease: 'expo.out',
           scrollTrigger: {
             trigger: scopeRef.current,
             start: 'top 85%',
@@ -87,7 +87,7 @@ export default function ProjectDetailPage() {
           y: 15,
           duration: 0.5,
           stagger: 0.12,
-          ease: 'power2.out',
+          ease: 'expo.out',
           scrollTrigger: {
             trigger: processRef.current,
             start: 'top 85%',

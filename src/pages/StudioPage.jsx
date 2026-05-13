@@ -63,7 +63,7 @@ export default function StudioPage() {
           {
             textContent: stat.value,
             duration: 1.5,
-            ease: 'power2.out',
+            ease: 'expo.out',
             snap: { textContent: 1 },
             scrollTrigger: { trigger: el, start: 'top 85%', once: true },
           }
@@ -76,7 +76,7 @@ export default function StudioPage() {
         y: 20,
         stagger: 0.08,
         duration: 0.6,
-        ease: 'power2.out',
+        ease: 'expo.out',
         scrollTrigger: {
           trigger: '.services__list',
           start: 'top 85%',

@@ -172,11 +172,11 @@ export const siteContent = {
   },
   projectsPage: {
     eyebrow: 'Trabajo seleccionado',
-    title: 'Casos construidos para que la marca se vea a la altura de su ambicion.',
+    title: 'Casos construidos para que la marca se vea a la altura de su ambición.',
     intro:
-      'Una lectura editorial de proyectos donde produccion, contenido, fotografia y colorizacion se organizan como casos, no como un grid generico de thumbnails.',
+      'Una lectura editorial de proyectos donde producción, contenido, fotografía y colorización se organizan como casos, no como un grid genérico de thumbnails.',
     rail:
-      'Cada proyecto se presenta con contexto, objetivo y servicios aplicados para que la pagina se lea como portfolio y como estudio.',
+      'Cada proyecto se presenta con contexto, objetivo y servicios aplicados para que la página se lea como portfolio y como estudio.',
     filters: [
       {
         id: 'all',
@@ -185,18 +185,18 @@ export const siteContent = {
       },
       {
         id: 'production',
-        label: 'Produccion',
-        description: 'Campanas, rodaje y ejecucion audiovisual',
+        label: 'Producción',
+        description: 'Campañas, rodaje y ejecución audiovisual',
       },
       {
         id: 'color',
-        label: 'Colorizacion',
+        label: 'Colorización',
         description: 'Finishing, grading y pulido final',
       },
       {
         id: 'photo',
-        label: 'Fotografia',
-        description: 'Frames, stills y direccion de imagen',
+        label: 'Fotografía',
+        description: 'Frames, stills y dirección de imagen',
       },
       {
         id: 'content',
