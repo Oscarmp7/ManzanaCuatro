@@ -1,13 +1,13 @@
 .theme-veil {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: var(--z-theme-veil);
   display: none;
   pointer-events: none;
   will-change: opacity;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
   .theme-veil {
     will-change: auto;
   }

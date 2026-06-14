@@ -81,9 +81,16 @@
   .text-swap__layer {
     transition: none;
     transition-delay: 0ms;
+    will-change: auto;
   }
 
   .text-swap__layer--secondary {
     display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .text-swap__layer {
+    will-change: auto;
   }
 }

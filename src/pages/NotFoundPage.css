@@ -1,0 +1,41 @@
+.not-found-page {
+  max-width: min(40rem, calc(100vw - (var(--layout-pad) * 2)));
+  margin: 0 auto;
+  padding: clamp(5rem, 14vw, 8rem) var(--layout-pad);
+  display: grid;
+  gap: 1rem;
+  text-align: center;
+}
+
+.not-found-page h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 9vw, 4.25rem);
+  line-height: 0.94;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.not-found-page p {
+  max-width: 32rem;
+  margin: 0 auto;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.not-found-page a {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.85rem 1.4rem;
+  border: 1px solid var(--separator);
+  border-radius: 2px;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.not-found-page a:is(:hover, :focus-visible) {
+  border-color: var(--accent);
+  color: var(--accent);
+}

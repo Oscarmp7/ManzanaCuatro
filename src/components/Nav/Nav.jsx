@@ -59,22 +59,21 @@ export default function Nav() {
   }, [menuOpen])
 
   useEffect(() => {
-    if (menuOpen && mobileRef.current) {
-      if (reducedMotion) {
-        return undefined
-      }
+    if (!menuOpen || !mobileRef.current || reducedMotion) {
+      return undefined
+    }
 
-      const links = mobileRef.current.querySelectorAll('.nav__mobile-link')
-      gsap.from(links, {
+    const ctx = gsap.context(() => {
+      gsap.from('.nav__mobile-link', {
         opacity: 0,
         y: 30,
         stagger: 0.05,
         duration: 0.4,
-        ease: 'power3.out',
+        ease: 'expo.out',
       })
-    }
+    }, mobileRef)
 
-    return undefined
+    return () => ctx.revert()
   }, [menuOpen, reducedMotion])
 
   const closeMenu = useCallback(() => setMenuOpen(false), [])
@@ -177,7 +176,7 @@ export default function Nav() {
       <header className={navClassName}>
         <div className="nav__inner">
           <div className="nav__desktop-shell">
-            <nav className="nav__grid" aria-label="Navegacion principal">
+            <nav className="nav__grid" aria-label="Navegación principal">
               {desktopLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -198,7 +197,7 @@ export default function Nav() {
                 type="button"
                 className={`nav__menu${menuOpen ? ' nav__menu--open' : ''}`}
                 onClick={() => setMenuOpen((value) => !value)}
-                aria-label={menuOpen ? 'Cerrar menu' : 'Abrir menu'}
+                aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                 aria-expanded={menuOpen}
                 aria-controls="nav-mobile-panel"
               >
@@ -244,7 +243,7 @@ export default function Nav() {
         >
           <div className="nav__mobile-inner">
             <h2 id="nav-mobile-title" className="nav__mobile-title">
-              Menu
+              Menú
             </h2>
             <Link to="/" className="nav__mobile-link nav__mobile-link--brand" onClick={closeMenu}>
               Manzana Cuatro
@@ -255,6 +254,7 @@ export default function Nav() {
                 to={link.href}
                 className="nav__mobile-link"
                 onClick={closeMenu}
+                aria-current={isLinkActive(link.href) ? 'page' : undefined}
               >
                 {link.label}
               </Link>

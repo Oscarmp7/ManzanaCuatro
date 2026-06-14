@@ -1,22 +1,16 @@
-import process from 'node:process'
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 
-test('vite defaults to root base for production builds', async () => {
-  delete process.env.DEPLOY_TARGET
+test('vite builds against the root base for the single Vercel target', async () => {
   const { default: viteConfig } = await import('../vite.config.js')
 
-  const config = await viteConfig({ command: 'build', mode: 'production' })
-
-  assert.equal(config.base, '/')
+  assert.equal(viteConfig.base, '/')
 })
 
-test('vite only uses the repository subpath for explicit GitHub Pages builds', async () => {
-  process.env.DEPLOY_TARGET = 'github-pages'
-  const { default: viteConfig } = await import('../vite.config.js')
+test('the github pages dual-target plumbing stays removed', () => {
+  const viteSource = readFileSync(new URL('../vite.config.js', import.meta.url), 'utf8')
 
-  const config = await viteConfig({ command: 'build', mode: 'production' })
-
-  assert.equal(config.base, '/Jeremy_web/')
-  delete process.env.DEPLOY_TARGET
+  assert.doesNotMatch(viteSource, /DEPLOY_TARGET/)
+  assert.doesNotMatch(viteSource, /github-pages/)
 })

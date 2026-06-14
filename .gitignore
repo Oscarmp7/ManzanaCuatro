@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+vercel-cookie.txt
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +27,14 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Local tooling / caches (not part of the project)
+.agents/
+.mateo/
+.impeccable/
+.playwright-mcp/
+.claude/skills/
+skills-lock.json
+
+# Claude Code local settings (contains tokens — never commit)
+.claude/settings.local.json

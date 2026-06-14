@@ -2,65 +2,55 @@
 
 ## Target
 
-Full codebase review of the "Manzana Cuatro" (jeremy-adonai) project — a React + Vite portfolio/agency website with cinematic GSAP animations, dark/light theme, and multi-page routing.
-
-Branch: `feat/m4-redesign`
+Full codebase of **jeremy-adonai** — a React + Vite portfolio/studio website for an audiovisual production company in Santo Domingo. The review focuses on: all optimization opportunities, dead/redundant code, performance (especially frontend bundle), mobile responsive issues, SEO, code quality, and architecture.
 
 ## Files
 
-### Source Files (JSX)
-- src/main.jsx
-- src/App.jsx
-- src/layouts/MainLayout.jsx
-- src/hooks/useTheme.js
-- src/data/siteContent.js
-- src/components/ThemeTransition/ThemeTransition.jsx
-- src/components/PageTransition/PageTransition.jsx
-- src/components/Loader/Loader.jsx
-- src/components/Nav/Nav.jsx
-- src/components/Hero/Hero.jsx
-- src/components/Marquee/Marquee.jsx
-- src/components/Footer/Footer.jsx
-- src/components/ProjectsPreview/ProjectsPreview.jsx
-- src/components/ProjectShowcase/ProjectShowcase.jsx
-- src/components/Separator/Separator.jsx
-- src/pages/HomePage.jsx
-- src/pages/StudioPage.jsx
-- src/pages/ContactPage.jsx
-- src/pages/ProjectsPage.jsx
-- src/pages/ProjectDetailPage.jsx
+### Source
+- `src/App.jsx`
+- `src/main.jsx`
+- `src/index.css`
+- `src/data/siteContent.js`
+- `src/hooks/usePrefersReducedMotion.js`
+- `src/hooks/useTheme.js`
+- `src/layouts/MainLayout.jsx`
+- `src/seo/routeMeta.js` / `src/seo/RouteMeta.jsx`
+- `src/pages/HomePage.jsx`
+- `src/pages/ProjectsPage.jsx`
+- `src/pages/ProjectDetailPage.jsx` / `.css`
+- `src/pages/StudioPage.jsx` / `.css`
+- `src/pages/ContactPage.jsx` / `.css`
+- `src/pages/NotFoundPage.jsx`
+- `src/components/Nav/Nav.jsx` / `.css`
+- `src/components/HomeReel/HomeReel.jsx` / `.css`
+- `src/components/HomeEndFrame/HomeEndFrame.jsx` / `.css`
+- `src/components/HomeClientBand/HomeClientBand.jsx` / `.css`
+- `src/components/ComparisonSlider/ComparisonSlider.jsx` / `.css`
+- `src/components/Footer/Footer.jsx` / `.css`
+- `src/components/Loader/Loader.jsx` / `.css`
+- `src/components/PageTransition/PageTransition.jsx` / `.css`
+- `src/components/ProjectShowcase/ProjectShowcase.jsx` / `.css`
+- `src/components/TextSwap/TextSwap.jsx` / `.css`
+- `src/components/ThemeTransition/ThemeTransition.jsx` / `.css`
 
-### CSS Files
-- src/index.css
-- src/components/ThemeTransition/ThemeTransition.css
-- src/components/PageTransition/PageTransition.css
-- src/components/Loader/Loader.css
-- src/components/Nav/Nav.css
-- src/components/Hero/Hero.css
-- src/components/Marquee/Marquee.css
-- src/components/Footer/Footer.css
-- src/components/ProjectsPreview/ProjectsPreview.css
-- src/components/ProjectShowcase/ProjectShowcase.css
-- src/pages/StudioPage.css
-- src/pages/ContactPage.css
-- src/pages/ProjectDetailPage.css
+### Config
+- `vite.config.js`
+- `eslint.config.js`
+- `package.json`
 
-### Config Files
-- index.html
-- vite.config.js
-- eslint.config.js
-- package.json
-
-### Test Files
-- tests/site-content.test.js
-- tests/layout-direction.test.js
+### Tests
+- `tests/layout-direction.test.js`
+- `tests/nav-layout.test.js`
+- `tests/route-meta.test.js`
+- `tests/site-content.test.js`
+- `tests/vite-base.test.js`
 
 ## Flags
 
 - Security Focus: no
-- Performance Critical: no
+- Performance Critical: yes (frontend SPA, visual-heavy)
 - Strict Mode: no
-- Framework: React 19 + Vite 7 + Tailwind CSS v4 + GSAP 3 + React Router 7
+- Framework: React + Vite (no TypeScript, CSS modules per component)
 
 ## Review Phases
 

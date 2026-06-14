@@ -1,9 +1,20 @@
 .page-stage {
-  will-change: clip-path;
+  position: relative;
+}
+
+.page-stage__wipe {
+  position: fixed;
+  inset: 0;
+  background: var(--curtain, #0a0a0a);
+  transform: translateX(100%);
+  pointer-events: none;
+  z-index: var(--z-page-wipe);
+  will-change: transform;
 }
 
 @media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  .page-stage {
+  .page-stage__wipe {
+    display: none;
     will-change: auto;
   }
 }

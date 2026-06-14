@@ -3,6 +3,8 @@ import TextSwap from '../TextSwap/TextSwap'
 import './HomeEndFrame.css'
 
 export default function HomeEndFrame() {
+  const currentYear = new Date().getFullYear()
+
   return (
     <section className="home-end">
       <div className="home-end__center">
@@ -11,7 +13,7 @@ export default function HomeEndFrame() {
           href={siteContent.contact.primaryCta.href}
           className="home-end__title"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           <TextSwap
             label={siteContent.contact.title}
@@ -30,7 +32,7 @@ export default function HomeEndFrame() {
           href={siteContent.brand.instagramHref}
           className="home-end__link"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           Instagram
         </a>
@@ -38,11 +40,11 @@ export default function HomeEndFrame() {
           href={siteContent.brand.whatsappHref}
           className="home-end__link"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           WhatsApp
         </a>
-        <span className="home-end__legal">© Manzana Cuatro 2026</span>
+        <span className="home-end__legal">&copy; Manzana Cuatro {currentYear}</span>
       </div>
     </section>
   )

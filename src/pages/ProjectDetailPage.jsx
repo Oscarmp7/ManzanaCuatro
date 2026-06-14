@@ -6,12 +6,12 @@ import { showcaseProjects, siteContent } from '../data/siteContent'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import './ProjectDetailPage.css'
 
-gsap.registerPlugin(ScrollTrigger)
 
 export default function ProjectDetailPage() {
   const { slug } = useParams()
   const reducedMotion = usePrefersReducedMotion()
 
+  const containerRef = useRef(null)
   const heroImgRef = useRef(null)
   const titleRef = useRef(null)
   const metaRef = useRef(null)
@@ -25,7 +25,6 @@ export default function ProjectDetailPage() {
     if (!project || reducedMotion) return undefined
 
     const ctx = gsap.context(() => {
-      // Hero parallax
       if (heroImgRef.current) {
         gsap.fromTo(
           heroImgRef.current,
@@ -43,25 +42,26 @@ export default function ProjectDetailPage() {
         )
       }
 
-      // Title mask reveal
-      if (titleRef.current) {
-        gsap.from(titleRef.current.querySelector('.project-detail__title-inner'), {
-          yPercent: 100,
-          duration: 0.8,
-          ease: 'power3.out',
-          delay: 0.2,
-        })
-      }
-
-      // Meta fade-in
-      if (metaRef.current) {
-        gsap.from(metaRef.current, {
-          opacity: 0,
-          y: 10,
-          duration: 0.6,
-          ease: 'power2.out',
-          delay: 0.5,
-        })
+      // Title mask reveal — fires after hero image loads (or immediately if already cached)
+      if (titleRef.current && heroImgRef.current) {
+        const titleInner = titleRef.current.querySelector('.project-detail__title-inner')
+        const revealTitle = () => {
+          gsap.from(titleInner, { yPercent: 100, duration: 0.8, ease: 'expo.out' })
+          if (metaRef.current) {
+            gsap.from(metaRef.current, {
+              opacity: 0,
+              y: 10,
+              duration: 0.6,
+              ease: 'expo.out',
+              delay: 0.3,
+            })
+          }
+        }
+        if (heroImgRef.current.complete) {
+          revealTitle()
+        } else {
+          heroImgRef.current.addEventListener('load', revealTitle, { once: true })
+        }
       }
 
       // Scope tags stagger
@@ -71,7 +71,7 @@ export default function ProjectDetailPage() {
           y: 15,
           duration: 0.5,
           stagger: 0.1,
-          ease: 'power2.out',
+          ease: 'expo.out',
           scrollTrigger: {
             trigger: scopeRef.current,
             start: 'top 85%',
@@ -86,21 +86,21 @@ export default function ProjectDetailPage() {
           y: 15,
           duration: 0.5,
           stagger: 0.12,
-          ease: 'power2.out',
+          ease: 'expo.out',
           scrollTrigger: {
             trigger: processRef.current,
             start: 'top 85%',
           },
         })
       }
-    })
+    }, containerRef)
 
     return () => ctx.revert()
   }, [project, reducedMotion])
 
   // Scroll to top on slug change
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }, [slug])
 
   if (!project) {
@@ -117,7 +117,7 @@ export default function ProjectDetailPage() {
   const nextProject = showcaseProjects[(projectIndex + 1) % total]
 
   return (
-    <div className="page--project-detail">
+    <div ref={containerRef} className="page page--project-detail">
       {/* Hero */}
       <section className="project-detail__hero">
         <img
@@ -199,13 +199,13 @@ export default function ProjectDetailPage() {
             className="project-detail__nav-link project-detail__nav-link--prev"
             to={`/proyectos/${prevProject.slug}`}
           >
-            ← {prevProject.title}
+            <span aria-hidden="true">←</span> {prevProject.title}
           </Link>
           <Link
             className="project-detail__nav-link project-detail__nav-link--next"
             to={`/proyectos/${nextProject.slug}`}
           >
-            {nextProject.title} →
+            {nextProject.title} <span aria-hidden="true">→</span>
           </Link>
         </nav>
       </div>

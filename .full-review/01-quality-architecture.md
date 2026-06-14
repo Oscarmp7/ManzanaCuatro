@@ -4,91 +4,107 @@
 
 ### Critical
 
-| ID | Finding | File | Line |
-|----|---------|------|------|
-| C1 | Test suite `layout-direction.test.js` references deleted components — tests will crash | tests/layout-direction.test.js | 17-33 |
-| C2 | Vite `base` path uses stale repo name (`Jeremy_web`), will break production routing; `BrowserRouter` has no matching `basename` | vite.config.js | 5-8 |
+| ID | File | Issue |
+|----|------|-------|
+| CRIT-1 | `useTheme.js:4` | `localStorage` read in render without SSR/env guard — breaks any prerender or test env |
+| CRIT-2 | `ProjectDetailPage.jsx:116` | Crash path when `showcaseProjects` is empty (`NaN % 0` → undefined → `.slug` throws) |
+| CRIT-3 | `ComparisonSlider.jsx:201` | `<button role="slider">` — invalid ARIA + `aria-disabled` conflicts with native `disabled` |
 
 ### High
 
-| ID | Finding | File | Line |
-|----|---------|------|------|
-| H1 | GSAP `gsap.context()` not scoped in `ProjectDetailPage` — animation leak | src/pages/ProjectDetailPage.jsx | 94 |
-| H2 | Duplicated GSAP animation patterns (fade-in + stagger + cleanup) across 6+ components | Multiple | — |
-| H3 | `ScrollTrigger.registerPlugin` called at module scope in 7 separate files | Multiple | — |
-| H4 | No React Error Boundary — GSAP failures or bad data will white-screen the app | App.jsx | — |
-| H5 | `Loader` component has `onComplete` in useEffect dependency array — potential infinite loop | src/components/Loader/Loader.jsx | 44 |
+| ID | File | Issue |
+|----|------|-------|
+| HIGH-1 | `HomeReel.jsx:390,397` | `getBoundingClientRect()` called on every GSAP scroll frame → forced layout thrashing |
+| HIGH-2 | `ThemeTransition.jsx:6` | Hook returns JSX (`curtain`) — anti-pattern, implicit DOM coupling, creates JSX on every render |
+| HIGH-3 | `Nav.jsx:54` | Body overflow unlock races with page transition animation — may cause jitter |
+| HIGH-5 | `StudioPage.jsx:60` | GSAP mutates React-managed `textContent` directly — re-render resets counter to 0 |
+| HIGH-6 | `HomeReel.jsx:176` | `dataset.homeReelTone` race condition on fast unmount/remount cycles |
+| HIGH-7 | `ProjectDetailPage.jsx:120` | **Missing `.page` class** — fixed nav overlaps hero image (visual regression in production) |
+| MOBILE-1 | `ProjectShowcase.css:74,392` | `position: sticky` + `overflow-x: auto` = broken on iOS Safari (well-documented incompatibility) |
+| MOBILE-2 | `HomeReel.css:399` | Comparison details absolute positioning overflows viewport at 1081–1200px |
 
 ### Medium
 
-| ID | Finding | File | Line |
-|----|---------|------|------|
-| M1 | Hardcoded strings in Hero, Footer, ContactPage that duplicate `siteContent` data | Multiple | — |
-| M2 | Marquee `clients` list is hardcoded, duplicating `showcaseProjects` data | src/components/Marquee/Marquee.jsx | 3 |
-| M3 | Inconsistent GSAP import style (default vs named) across codebase | Multiple | — |
-| M4 | `ProjectShowcase` renders all images simultaneously — no lazy loading | src/components/ProjectShowcase/ProjectShowcase.jsx | 23-32 |
-| M5 | `Separator` uses inline styles instead of CSS class; two competing separator implementations | src/components/Separator/Separator.jsx | 31-39 |
-| M6 | No `404` / catch-all route — undefined URLs render empty layout | src/App.jsx | 25-32 |
-| M7 | `Nav` active link matching is exact-only — nested routes won't highlight | src/components/Nav/Nav.jsx | 64 |
-| M8 | `useLayoutEffect` in `PageTransition` may warn in SSR contexts | src/components/PageTransition/PageTransition.jsx | 11 |
+| ID | File | Issue |
+|----|------|-------|
+| MED-1 | `NotFoundPage.jsx:5` | Borrows `project-detail__not-found` CSS without importing file → unstyled 404 on direct navigation |
+| MED-2 | `index.css:50–75` | Font vars declared twice: Tailwind `@theme` block + `:root` — duplicate definitions, order-of-precedence risk |
+| MED-3 | `HomeReel.jsx:198` | `applyStage` is 280 lines mixing 6+ concerns — highest maintainability risk in the project |
+| MED-4 | `HomeReel.jsx:61–63` | 3 dead constants: `COLOR_COMPARISON_ENTRY_Y/SCALE/ROTATE` — never referenced |
+| MED-5 | `ProjectShowcase.jsx:108` | Disciplines + scope chips both rendered in same `<ul>` — redundant, potential duplicate keys |
+| MED-6 | `useTheme.js:4` | Ignores `prefers-color-scheme` on first visit — always defaults to dark |
+| MED-7 | `HomeReel.css:70–84` | Z-index hardcoded for exactly 4 frames — breaks if slice count changes |
+| MED-8 | `ContactPage.jsx:49` | Title animation has no initial CSS state — flashes if GSAP is delayed |
+| MOBILE-3 | `HomeReel.jsx:646` | Baseline spans lack semantic grouping on mobile stacked layout |
+| MOBILE-4 | `Nav.jsx:247` | Mobile menu dialog labeled "Menu" (English) in a Spanish-first site |
+| MOBILE-5 | `ContactPage.jsx:28` | Non-interactive "Web" card shows hover feedback suggesting it's a link |
 
 ### Low
 
-| ID | Finding | File | Line |
-|----|---------|------|------|
-| L1 | Copyright year hardcoded in Hero (`2026`) | src/components/Hero/Hero.jsx | 103 |
-| L2 | Marquee uses array index as React key | src/components/Marquee/Marquee.jsx | 9 |
-| L3 | StudioPage manifesto uses array index as key | src/pages/StudioPage.jsx | 91 |
-| L4 | Missing `aria-label` on theme toggle and prev/next project links | Multiple | — |
-| L5 | `package.json` name is `jeremy-adonai` — does not match the brand | package.json | 2 |
+| ID | File | Issue |
+|----|------|-------|
+| LOW-1 | `Footer.jsx:13` | Brand name hardcoded as string instead of `siteContent.brand.name` |
+| LOW-2 | `HomeEndFrame.jsx:45` | Copyright year hardcoded as `2026` — should use `new Date().getFullYear()` |
+| LOW-3 | `StudioPage.jsx:27` | Unscoped global GSAP selectors (pattern works but risky in multi-instance scenarios) |
+| LOW-4 | `siteContent.js` | Missing accent marks in several Spanish strings (affects SEO meta descriptions) |
+| LOW-5 | `Nav.jsx:113,137` | Shadowed `firstFocusable` variable in focus-trap handler — readability issue |
+| LOW-6 | `ProjectDetailPage.jsx:170` | Array index used as `key` for static list (safe today, not best practice) |
 
 ---
 
 ## Architecture Findings
 
+### Critical
+
+| ID | Area | Issue |
+|----|------|-------|
+| ARCH-CRIT-1 | SEO | **All meta tags injected via `useEffect`** — search engines and social scrapers (WhatsApp, Instagram) see zero metadata. Shared links render as blank previews. This directly undermines the studio's marketing pipeline. |
+
 ### High
 
-| ID | Finding | Impact |
-|----|---------|--------|
-| A-H1 | Inconsistent ScrollTrigger cleanup — `Separator.jsx` and `HomePage.jsx` use fragile manual `ScrollTrigger.getAll().forEach()` pattern instead of `ctx.revert()` | Memory leaks and stale scroll handlers; `ref.current` may be null during cleanup |
-| A-H2 | Loader `onComplete` callback instability (same as H5 above) | Potential GSAP timeline re-creation mid-animation |
+| ID | Area | Issue |
+|----|------|-------|
+| ARCH-HIGH-1 | Components | `HomeReel.jsx` is 655 lines managing 6 distinct animation systems — monolith with ~180 lines of imperative DOM code in a single `useEffect` |
+| ARCH-HIGH-2 | State | Ref-mirrored state pattern (`activeComparisonIndex` + `activeComparisonIndexRef`) is error-prone and adds cognitive overhead |
+| ARCH-HIGH-3 | Performance | Up to 10 autoplay videos load simultaneously on homepage — critical issue on mobile networks |
+| ARCH-HIGH-4 | CSS | **Tailwind CSS imported + processed but zero utility classes used** — dead weight in bundle, processing overhead, conflicting `@theme` declarations |
 
 ### Medium
 
-| ID | Finding | Impact |
-|----|---------|--------|
-| A-M1 | `ThemeTransition` is a hook exported from a `.jsx` component file | Confusing module contract; breaks naming conventions |
-| A-M2 | Theme state prop-drilled (App → MainLayout → Nav) instead of Context | Does not scale; any new theme-aware component requires threading |
-| A-M3 | No data validation or TypeScript types on `siteContent.js` | Runtime fragility as content grows; TS type packages already installed but unused |
-| A-M4 | GSAP animation boilerplate repeated in 7 components | Maintenance cost; inconsistent behavior across components |
-| A-M5 | Inconsistent page padding convention (`page` vs `page--*` vs inline) | Layout fragility; new developers won't know which class to apply |
-| A-M6 | Hero background image coupled to `showcaseProjects[0].poster` | Hero visual identity changes silently if project order changes |
-| A-M7 | No route-level code splitting (all pages eagerly imported) | All page code loads upfront |
-| A-M8 | Mobile menu (`role="dialog"`, `aria-modal="true"`) lacks focus trap | WCAG 2.1 SC 2.4.3 violation |
-| A-M9 | Tailwind `@theme` font tokens duplicate `:root` CSS custom properties | Potential drift between two font systems |
+| ID | Area | Issue |
+|----|------|-------|
+| ARCH-MED-1 | Data Flow | `theme`/`toggleTheme` prop-drilled 3 levels — candidate for React Context |
+| ARCH-MED-2 | Events | `CustomEvent` on `window` for HomeReel→Nav tone communication — bypasses React data model, invisible dependency |
+| ARCH-MED-3 | Routing | `<Suspense fallback={null}>` — empty content flash on slow connections |
+| ARCH-MED-4 | Routing | No centralized scroll restoration — manual `scrollTo(0,0)` in two places |
+| ARCH-MED-5 | SEO | No structured data (JSON-LD) — missing `LocalBusiness`, `Organization`, `CreativeWork` schemas |
+| ARCH-MED-6 | Performance | `will-change` applied permanently via CSS to many elements — GPU memory waste on mobile |
+| ARCH-MED-7 | Performance | Multiple `backdrop-filter: blur()` layers active simultaneously — compounding GPU cost |
+| ARCH-MED-8 | CSS | No CSS Modules or scoping — BEM manually enforced, collision risk as project grows |
+| ARCH-MED-9 | CSS | 8 different breakpoint values across files (560px, 600px, 720px, 768px, 900px, 960px, 1080px, 1200px) — no shared convention |
+| ARCH-MED-10 | Build | No `manualChunks` — GSAP (~60KB) potentially duplicated across chunks |
+| ARCH-MED-11 | Mobile | Desktop-first CSS — mobile overrides on all files (performance suboptimal for mobile-first audience) |
+| ARCH-MED-12 | Error Handling | No React Error Boundary anywhere — any render error crashes entire app to white screen |
 
 ### Low
 
-| ID | Finding | Impact |
-|----|---------|--------|
-| A-L1 | Marquee hardcodes client list (same as M2) | Data duplication risk |
-| A-L2 | ContactPage derives data at module scope | Tight coupling to module load order; harder to test |
-| A-L3 | Inconsistent gsap import style (same as M3) | Minor inconsistency |
-| A-L4 | Linear project lookup without accessor function | No encapsulation; manageable at 5 projects |
-| A-L5 | Hero hardcodes text that exists in `siteContent` (same as M1) | Data source inconsistency |
-| A-L6 | Only 2 of 4 font families preloaded | FOUT risk for Space Mono and Cormorant Garamond |
-| A-L7 | `ProjectShowcase` list items focus indicator may be clipped by `overflow: hidden` | Minor accessibility gap |
+| ID | Area | Issue |
+|----|------|-------|
+| ARCH-LOW-1 | Components | `ThemeTransition` lives in `components/` but exports a hook — misleading location |
+| ARCH-LOW-2 | Components | `NotFoundPage` implicit CSS dependency on `ProjectDetailPage.css` |
+| ARCH-LOW-3 | SEO | OG image hosted on external Vercel Blob URL — single point of failure for social previews |
+| ARCH-LOW-4 | Performance | `HomeClientBand` creates 60 DOM nodes — reducible to 20 with 2 loop repetitions |
+| ARCH-LOW-5 | Build | No font `<link rel="preload">` for critical path fonts (Bebas Neue, Inter) |
+| ARCH-LOW-6 | Dependencies | `@types/react` + `@types/react-dom` in devDeps — unused, no TypeScript in project |
+| ARCH-LOW-7 | Data | Module-level `siteContent` destructuring — will silently break if ever made dynamic |
 
 ---
 
 ## Critical Issues for Phase 2 Context
 
-These findings should inform the Security and Performance reviews:
-
-1. **Broken tests** (C1) — CI pipeline is non-functional; security scanning gates cannot run
-2. **Stale Vite base path** (C2) — production asset paths will 404; potential for serving assets from wrong path
-3. **No Error Boundary** (H4) — any runtime error (including from malformed external data or images) causes full app crash
-4. **All showcase images load eagerly** (M4) — performance bottleneck on projects page
-5. **No code splitting** (A-M7) — entire app loaded on first visit
-6. **Mobile menu lacks focus trap** (A-M8) — accessibility/security overlap (keyboard users can interact with hidden content)
-7. **Hero image coupled to external URL** (A-M6) — if the Vercel Blob Storage URL changes or is compromised, the hero breaks silently
+1. **Client-side-only SEO** — affects crawlability, directly relevant to security headers review (CSP, canonical URLs)
+2. **10 concurrent autoplay videos** — primary performance bottleneck for mobile users
+3. **No Error Boundary** — any unhandled error exposes raw React stack traces to users (security/UX)
+4. **Unused Tailwind** — adds unnecessary build surface and bundle overhead
+5. **`PROJECT_DETAIL` missing `.page` class** — HIGH-7 is likely visually broken in production right now
+6. **`MOBILE-1` sticky+overflow** — iOS Safari silent break on project filters

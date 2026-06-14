@@ -20,7 +20,7 @@ export default function useThemeTransition(onMidpoint) {
 
     // Dark → light: white overexposure flash. Light → dark: black shutter flash.
     const currentTheme = document.documentElement.dataset.theme
-    const flashColor = currentTheme === 'dark' ? '#ffffff' : '#0a0a0a'
+    const flashColor = currentTheme === 'dark' ? 'var(--flash-overexpose)' : 'var(--flash-shutter)'
 
     const veil = veilRef.current
     veil.style.background = flashColor
@@ -28,7 +28,7 @@ export default function useThemeTransition(onMidpoint) {
     const tl = gsap.timeline({
       onComplete: () => {
         animatingRef.current = false
-        veil.style.background = ''
+        if (veilRef.current) veilRef.current.style.background = ''
       },
     })
 

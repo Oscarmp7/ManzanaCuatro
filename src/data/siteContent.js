@@ -23,9 +23,6 @@ export const showcaseProjects = [
     poster: portfolioImages[0],
     video: portfolioPlaceholderVideos[0],
     disciplines: ['production', 'color', 'content'],
-    objective:
-      'Traducir una promocion estacional en una pieza social con calidez, marca y recordacion inmediata.',
-    deliverable: 'Spot vertical para redes / campana estacional',
     summary:
       'Una campaña pensada para conectar emoción, producto y recordación en una pieza social con acabado cinematográfico.',
     scope: ['Producción audiovisual', 'Filmación', 'Colorización'],
@@ -44,9 +41,6 @@ export const showcaseProjects = [
     poster: portfolioImages[1],
     video: portfolioPlaceholderVideos[1],
     disciplines: ['photo', 'content'],
-    objective:
-      'Convertir atmosfera, espacio y experiencia de marca en contenido aspiracional listo para campanas.',
-    deliverable: 'Stills editoriales + contenido corto para hospitality',
     summary:
       'Contenido audiovisual premium para traducir atmósfera, diseño y experiencia en una presencia visual más aspiracional.',
     scope: ['Fotografía', 'Filmación', 'Creación de contenido'],
@@ -65,9 +59,6 @@ export const showcaseProjects = [
     poster: portfolioImages[2],
     video: portfolioPlaceholderVideos[2],
     disciplines: ['production', 'content'],
-    objective:
-      'Empujar presencia, energia y performance en una ejecucion pensada para social, pauta y lanzamiento.',
-    deliverable: 'Contenido de lanzamiento automotriz / social-first',
     summary:
       'Producción de contenido para una marca automotriz que exige presencia, energía y ejecución técnica sólida.',
     scope: ['Producción audiovisual', 'Filmación', 'Creación de contenido'],
@@ -86,9 +77,6 @@ export const showcaseProjects = [
     poster: portfolioImages[3],
     video: portfolioPlaceholderVideos[3],
     disciplines: ['production', 'photo', 'content'],
-    objective:
-      'Equilibrar claridad comercial y presencia visual en piezas que necesitan vender sin perder pulido.',
-    deliverable: 'Campana retail con adaptaciones para social y fotografia',
     summary:
       'Piezas claras y actuales para comunicar confianza, dinamismo y cercanía en el punto exacto entre utilidad y marca.',
     scope: ['Producción audiovisual', 'Fotografía', 'Creación de contenido'],
@@ -106,9 +94,6 @@ export const showcaseProjects = [
     year: '2025',
     poster: portfolioImages[4],
     disciplines: ['color', 'photo'],
-    objective:
-      'Construir una presencia de lujo mas sobria y precisa, con textura, reflejos y finishing de alto nivel.',
-    deliverable: 'Finishing premium + stills para marca luxury',
     summary:
       'Una dirección visual más sobria y precisa para una marca que demanda detalle, carácter y una ejecución impecable.',
     scope: ['Filmación', 'Colorización', 'Fotografía'],
@@ -125,7 +110,6 @@ export const siteContent = {
     name: 'Manzana Cuatro',
     location: 'Santo Domingo, República Dominicana',
     email: 'info@manzanacuatro.com',
-    phone: '849-863-3817',
     whatsappHref: 'https://wa.me/18498633817',
     instagramHref: 'https://instagram.com/manzanacuatro',
     instagramLabel: '@manzanacuatro',
@@ -149,60 +133,17 @@ export const siteContent = {
     text:
       'Creamos piezas audiovisuales para campañas, redes sociales y marcas que necesitan verse a la altura de lo que están construyendo.',
     primaryCta: { label: 'Ver portafolio', href: '/proyectos' },
-    secondaryCta: { label: 'Escríbenos por WhatsApp', href: 'https://wa.me/18498633817' },
     availability: 'Disponible para campañas, contenido social y producción comercial.',
-    reelLabel: 'Portfolio / trabajos seleccionados',
-  },
-  ticker: [
-    'Producción audiovisual',
-    'Colorización',
-    'Filmación',
-    'Fotografía',
-    'Creación de contenido',
-    'Campañas',
-    'Redes sociales',
-    'Contenido de marca',
-  ],
-  work: {
-    eyebrow: 'Casos seleccionados',
-    title: 'Trabajo hecho para verse grande.',
-    intro:
-      'Una selección de piezas desarrolladas para marcas, espacios y campañas que necesitaban impacto visual con ejecución real.',
-    modalCta: 'Solicita una cotización ahora',
   },
   projectsPage: {
     eyebrow: 'Trabajo seleccionado',
-    title: 'Casos construidos para que la marca se vea a la altura de su ambicion.',
-    intro:
-      'Una lectura editorial de proyectos donde produccion, contenido, fotografia y colorizacion se organizan como casos, no como un grid generico de thumbnails.',
-    rail:
-      'Cada proyecto se presenta con contexto, objetivo y servicios aplicados para que la pagina se lea como portfolio y como estudio.',
+    title: 'Casos construidos para que la marca se vea a la altura de su ambición.',
     filters: [
-      {
-        id: 'all',
-        label: 'Todos',
-        description: 'Panorama completo del estudio',
-      },
-      {
-        id: 'production',
-        label: 'Produccion',
-        description: 'Campanas, rodaje y ejecucion audiovisual',
-      },
-      {
-        id: 'color',
-        label: 'Colorizacion',
-        description: 'Finishing, grading y pulido final',
-      },
-      {
-        id: 'photo',
-        label: 'Fotografia',
-        description: 'Frames, stills y direccion de imagen',
-      },
-      {
-        id: 'content',
-        label: 'Contenido',
-        description: 'Piezas pensadas para social y pauta',
-      },
+      { id: 'all', label: 'Todos' },
+      { id: 'production', label: 'Producción' },
+      { id: 'color', label: 'Colorización' },
+      { id: 'photo', label: 'Fotografía' },
+      { id: 'content', label: 'Contenido' },
     ],
   },
   about: {
@@ -210,8 +151,6 @@ export const siteContent = {
     title: 'Pasión por elevar marcas a través de los audiovisuales.',
     text:
       'Manzana Cuatro trabaja como aliado audiovisual para agencias, empresas, creadores y marcas que necesitan una producción cuidada, moderna y confiable sin pasar por estructuras pesadas.',
-    shortBio:
-      'Hacemos piezas audiovisuales para redes sociales y demás medios digitales con una mezcla de criterio visual, disciplina técnica y enfoque comercial.',
     image:
       'https://wol7zpzfeh2wdhnp.public.blob.vercel-storage.com/briefs/1773102078593-white.jpg',
     highlights: [
@@ -235,47 +174,40 @@ export const siteContent = {
   servicesSection: {
     eyebrow: 'Servicios',
     title: 'Capacidad de estudio para campañas que necesitan nivel.',
-    text:
-      'Servicios presentados con la claridad de un partner audiovisual, no con el ruido de una agencia genérica.',
     cta: { label: 'Solicita una cotización ahora', href: 'https://wa.me/18498633817' },
   },
   colorization: {
     title: 'Colorización',
-    beforeLabel: 'Raw',
-    afterLabel: 'Colorizado',
-    reels: [
+    cases: [
       {
         title: 'Beauty / retail grade',
         client: 'Maison Vale',
         category: 'Retail social',
         year: '2025',
-        summary:
-          'Un look mas limpio y luminoso para empujar piel, producto y lujo comercial sin perder naturalidad.',
-        tags: ['Colorizacion', 'Retail', 'Vertical'],
-        video: portfolioPlaceholderVideos[0],
+        tags: ['Colorización', 'Retail', 'Vertical'],
+        media: portfolioPlaceholderVideos[0],
         poster: portfolioImages[0],
+        isVideo: true,
       },
       {
         title: 'Hospitality look pass',
         client: 'Shibuya Casa de Campo',
         category: 'Hospitality reel',
         year: '2025',
-        summary:
-          'Balance de tonos y contraste para convertir una atmosfera aspiracional en una pieza lista para campana.',
         tags: ['Finishing', 'Hospitality', 'Campaign'],
-        video: portfolioPlaceholderVideos[1],
+        media: portfolioPlaceholderVideos[1],
         poster: portfolioImages[1],
+        isVideo: true,
       },
       {
         title: 'Automotive finishing',
         client: 'Changan Dominicana',
         category: 'Launch spot',
         year: '2025',
-        summary:
-          'Un acabado mas denso y controlado para elevar metal, reflejos y sensacion de performance en movimiento.',
-        tags: ['Colorizacion', 'Automotive', 'Commercial'],
-        video: portfolioPlaceholderVideos[2],
+        tags: ['Colorización', 'Automotive', 'Commercial'],
+        media: portfolioPlaceholderVideos[2],
         poster: portfolioImages[2],
+        isVideo: true,
       },
     ],
   },
@@ -285,7 +217,5 @@ export const siteContent = {
     text:
       'Si tienes una campaña, una idea o una marca que necesita una ejecución visual más fuerte, conversemos por la vía más directa.',
     primaryCta: { label: 'Escríbenos por WhatsApp', href: 'https://wa.me/18498633817' },
-    secondaryCta: { label: 'Ver portafolio', href: '/proyectos' },
-    notes: ['Solo español', 'Respuesta directa', 'Enfoque en RD'],
   },
 }

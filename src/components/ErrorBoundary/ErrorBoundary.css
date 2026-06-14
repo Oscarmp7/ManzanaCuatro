@@ -1,0 +1,38 @@
+.app-error {
+  min-height: calc(100vh - var(--nav-height));
+  max-width: min(42rem, calc(100vw - (var(--layout-pad) * 2)));
+  margin: 0 auto;
+  padding: clamp(4rem, 12vw, 7rem) var(--layout-pad);
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+}
+
+.app-error__eyebrow {
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.app-error h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 8vw, 4.6rem);
+  line-height: 0.94;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.app-error > p:last-of-type {
+  max-width: 34rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.app-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+}

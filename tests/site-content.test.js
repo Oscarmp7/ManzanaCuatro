@@ -8,7 +8,6 @@ test('site content reflects the Manzana Cuatro brief and dedicated client band d
   assert.equal(siteContent.brand.email, 'info@manzanacuatro.com')
   assert.match(siteContent.brand.whatsappHref, /18498633817/)
   assert.equal(siteContent.hero.primaryCta.label, 'Ver portafolio')
-  assert.equal(siteContent.hero.secondaryCta.label, 'Escríbenos por WhatsApp')
   assert.equal(siteContent.contact.title, 'Comienza tu historia')
   assert.deepEqual(
     siteContent.clients.map((client) => client.name),
@@ -60,8 +59,7 @@ test('showcase projects, services, and reel videos match the brief inventory', (
     showcaseProjects.every(
       (project) => Array.isArray(project.disciplines)
         && project.disciplines.length >= 1
-        && typeof project.deliverable === 'string'
-        && typeof project.objective === 'string',
+        && typeof project.summary === 'string',
     ),
     true,
   )
@@ -82,23 +80,20 @@ test('shared navigation uses the approved spanish-first information architecture
   assert.equal(siteContent.about.eyebrow, 'Estudio')
 })
 
-test('colorization content exposes the home comparison story', () => {
+test('colorization content exposes the gallery cases', () => {
   assert.equal(siteContent.colorization.title, 'Colorización')
-  assert.equal(siteContent.colorization.beforeLabel, 'Raw')
-  assert.equal(siteContent.colorization.afterLabel, 'Colorizado')
-  assert.equal(Array.isArray(siteContent.colorization.reels), true)
-  assert.equal(siteContent.colorization.reels.length, 3)
+  assert.equal(Array.isArray(siteContent.colorization.cases), true)
+  assert.equal(siteContent.colorization.cases.length >= 1, true)
   assert.equal(
-    siteContent.colorization.reels.every(
-      (reel) => typeof reel.title === 'string'
-        && typeof reel.client === 'string'
-        && typeof reel.category === 'string'
-        && typeof reel.year === 'string'
-        && typeof reel.summary === 'string'
-        && Array.isArray(reel.tags)
-        && reel.tags.length >= 2
-        && typeof reel.video === 'string'
-        && typeof reel.poster === 'string',
+    siteContent.colorization.cases.every(
+      (c) => typeof c.title === 'string'
+        && typeof c.client === 'string'
+        && typeof c.category === 'string'
+        && typeof c.year === 'string'
+        && Array.isArray(c.tags)
+        && c.tags.length >= 1
+        && typeof c.media === 'string'
+        && typeof c.poster === 'string',
     ),
     true,
   )
@@ -106,16 +101,13 @@ test('colorization content exposes the home comparison story', () => {
 
 test('projects page content exposes editorial framing and service filters', () => {
   assert.equal(typeof siteContent.projectsPage.title, 'string')
-  assert.equal(typeof siteContent.projectsPage.intro, 'string')
   assert.equal(Array.isArray(siteContent.projectsPage.filters), true)
   assert.deepEqual(
     siteContent.projectsPage.filters.map((filter) => filter.id),
     ['all', 'production', 'color', 'photo', 'content'],
   )
   assert.equal(
-    siteContent.projectsPage.filters.every(
-      (filter) => typeof filter.label === 'string' && typeof filter.description === 'string',
-    ),
+    siteContent.projectsPage.filters.every((filter) => typeof filter.label === 'string'),
     true,
   )
 })

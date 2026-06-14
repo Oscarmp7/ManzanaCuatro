@@ -1,5 +1,5 @@
 .footer {
-  border-top: 1px solid var(--text-dim);
+  border-top: 1px solid var(--separator);
   padding: 3rem var(--layout-pad) 2rem;
   max-width: var(--layout-max);
   margin: 0 auto;

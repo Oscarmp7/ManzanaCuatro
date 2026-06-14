@@ -1,34 +1,23 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { siteContent } from '../data/siteContent'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import './ContactPage.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 const { brand, contact } = siteContent
 
-const contactCards = [
-  {
-    label: 'WhatsApp',
-    value: brand.phone,
-    href: brand.whatsappHref,
-  },
+const contactChannels = [
   {
     label: 'Email',
     value: brand.email,
     href: `mailto:${brand.email}`,
+    external: false,
   },
   {
     label: 'Instagram',
     value: brand.instagramLabel,
     href: brand.instagramHref,
-  },
-  {
-    label: 'Web',
-    value: brand.domain,
-    href: null,
+    external: true,
   },
 ]
 
@@ -37,54 +26,28 @@ export default function ContactPage() {
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
-    if (reducedMotion) {
-      return undefined
-    }
+    if (reducedMotion) return undefined
 
     const section = sectionRef.current
     if (!section) return
 
     const ctx = gsap.context(() => {
-      // Title mask reveal
       gsap.fromTo(
         section.querySelector('.contact__title'),
         { yPercent: 100 },
-        {
-          yPercent: 0,
-          duration: 0.5,
-          ease: 'power3.out',
-        }
+        { yPercent: 0, duration: 0.7, ease: 'expo.out' }
       )
 
-      // Subtitle + CTA stagger fade in
       gsap.fromTo(
         section.querySelectorAll('.contact__fade-in'),
-        { opacity: 0, y: 14 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power3.out',
-          delay: 0.25,
-        }
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'expo.out', delay: 0.2 }
       )
 
-      // Contact cards stagger on scroll
       gsap.fromTo(
-        section.querySelectorAll('.contact-card'),
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.45,
-          stagger: 0.08,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section.querySelector('.contact__grid'),
-            start: 'top 85%',
-          },
-        }
+        section.querySelectorAll('.contact__channel'),
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'expo.out', delay: 0.55 }
       )
     }, section)
 
@@ -93,15 +56,15 @@ export default function ContactPage() {
 
   return (
     <section className="contact" ref={sectionRef}>
-      {/* Title */}
+
+      <span className="contact__eyebrow contact__fade-in">{contact.eyebrow}</span>
+
       <div className="contact__title-wrap">
         <h1 className="contact__title">{contact.title}</h1>
       </div>
 
-      {/* Subtitle */}
       <p className="contact__subtitle contact__fade-in">{contact.text}</p>
 
-      {/* Primary CTA */}
       <a
         className="contact__cta contact__fade-in"
         href={contact.primaryCta.href}
@@ -111,32 +74,28 @@ export default function ContactPage() {
         {contact.primaryCta.label} &rarr;
       </a>
 
-      {/* Separator */}
-      <div className="contact__separator contact__fade-in" />
+      <div className="contact__separator" />
 
-      {/* Contact Grid */}
-      <div className="contact__grid">
-        {contactCards.map((card) => (
-          <div className="contact-card" key={card.label}>
-            <div className="contact-card__label">{card.label}</div>
-            {card.href ? (
-              <a
-                className="contact-card__value"
-                href={card.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {card.value}
-              </a>
-            ) : (
-              <span className="contact-card__value">{card.value}</span>
-            )}
-          </div>
+      <div className="contact__channels">
+        {contactChannels.map((ch) => (
+          <a
+            key={ch.label}
+            className="contact__channel"
+            href={ch.href}
+            target={ch.external ? '_blank' : undefined}
+            rel={ch.external ? 'noopener noreferrer' : undefined}
+          >
+            <span className="contact__channel-label">{ch.label}</span>
+            <span className="contact__channel-arrow" aria-hidden="true">→</span>
+            <span className="contact__channel-value">{ch.value}</span>
+          </a>
         ))}
       </div>
 
-      {/* Notes */}
-      <p className="contact__notes">{contact.notes.join(' · ')}</p>
+      <p className="contact__notes">
+        {brand.domain}&ensp;·&ensp;{brand.location}
+      </p>
+
     </section>
   )
 }

@@ -1,19 +1,9 @@
-import process from 'node:process'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import tailwindcss from '@tailwindcss/vite'
 
-const repoName = 'Jeremy_web'
-
-const resolveBase = ({ command }) => {
-  if (command !== 'build') {
-    return '/'
-  }
-
-  return process.env.DEPLOY_TARGET === 'github-pages' ? `/${repoName}/` : '/'
-}
-
-export default defineConfig(({ command }) => ({
-  base: resolveBase({ command }),
-  plugins: [react(), tailwindcss()],
-}))
+// Single deploy target: Vercel (root base). The old GitHub Pages dual-target
+// was removed because BrowserRouter routing never supported the subpath.
+export default defineConfig({
+  base: '/',
+  plugins: [react()],
+})

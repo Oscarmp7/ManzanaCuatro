@@ -1,17 +1,67 @@
+/* ============================================
+   Loader — Grade Reveal
+   The home title-card in a "log" state, graded
+   live by a horizontal mask wipe, with a
+   colorist HUD. Always plays on the dark stage
+   regardless of UI theme.
+   ============================================ */
+
 .loader {
+  /* Log-state look: lifted blacks, washed cream — theme-independent. */
+  --log-bg: #161614;
+  --log-text: #b9b9b3;
+  --log-text-soft: #8e8e88;
+  --grade-x: -12%;
+
   position: fixed;
   inset: 0;
-  z-index: 10000;
-  background: #050505;
-  display: grid;
-  place-items: center;
+  z-index: var(--z-loader);
   pointer-events: none;
 }
 
-.loader__content {
-  width: 100%;
+/* Backdrop is a separate layer: the reveal fades ONLY this void, while the
+   graded card stays solid above its identical home twin — the card never
+   crossfades, so the handoff reads as the void opening, not a swap. */
+.loader__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--stage-bg);
+}
+
+/* --- Scenes (graded below, log above) --- */
+
+.loader__scene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   padding: 0 var(--layout-pad);
 }
+
+.loader__scene--log {
+  background: var(--log-bg);
+  /* Same wipe language as the color-stage title fill: hard edge + feather.
+     The log layer is visible from --grade-x onward; the graded scene shows
+     through the transparent region behind it. */
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent var(--grade-x),
+    rgba(0, 0, 0, 0.75) calc(var(--grade-x) + 6%),
+    #000 calc(var(--grade-x) + 12%),
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent var(--grade-x),
+    rgba(0, 0, 0, 0.75) calc(var(--grade-x) + 6%),
+    #000 calc(var(--grade-x) + 12%),
+    #000 100%
+  );
+}
+
+/* --- Title card (mirrors the home brand title-card metrics exactly) --- */
 
 .loader__title-card {
   display: grid;
@@ -19,7 +69,7 @@
   align-content: center;
   text-align: center;
   gap: 0.6rem;
-  min-height: clamp(21rem, 42dvh, 29rem);
+  min-height: var(--brand-card-step);
 }
 
 .loader__meta {
@@ -27,18 +77,18 @@
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.78);
+  color: color-mix(in srgb, var(--stage-text) 78%, transparent);
 }
 
 .loader__wordmark {
   font-family: var(--font-display);
-  font-size: clamp(4rem, 12vw, 10rem);
-  line-height: 0.88;
-  letter-spacing: 0.04em;
+  font-size: var(--brand-display-size);
+  line-height: 0.84;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   text-wrap: balance;
-  max-width: min(14ch, calc(100vw - (var(--layout-pad) * 2)));
-  color: var(--text);
+  max-width: min(15ch, calc(100vw - (var(--layout-pad) * 2)));
+  color: var(--stage-text);
 }
 
 .loader__view {
@@ -47,22 +97,113 @@
   justify-content: center;
   min-width: fit-content;
   padding: 0.55rem 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--text) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--stage-text) 65%, transparent);
   background: color-mix(in srgb, #000 35%, transparent);
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--stage-text);
 }
 
+/* Log-state overrides: washed text, lifted contrast */
+
+.loader__scene--log .loader__meta {
+  color: color-mix(in srgb, var(--log-text-soft) 90%, transparent);
+}
+
+.loader__scene--log .loader__wordmark {
+  color: var(--log-text);
+}
+
+.loader__scene--log .loader__view {
+  color: var(--log-text);
+  border-color: color-mix(in srgb, var(--log-text) 45%, transparent);
+  background: transparent;
+}
+
+/* --- Colorist HUD --- */
+
+.loader__hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1.1rem, 3vh, 2rem) var(--layout-pad);
+  visibility: hidden; /* GSAP autoAlpha manages this */
+}
+
+.loader__hud-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-hud);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--stage-text) 55%, transparent);
+}
+
+.loader__grade {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.loader__grade-bar {
+  position: relative;
+  display: inline-block;
+  width: clamp(120px, 16vw, 200px);
+  height: 1px;
+  background: color-mix(in srgb, var(--stage-text) 18%, transparent);
+  overflow: hidden;
+}
+
+.loader__grade-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: color-mix(in srgb, var(--stage-text) 85%, transparent);
+  transition: background-color 0.2s ease;
+}
+
+.loader__grade-pct {
+  min-width: 3.2ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Grade complete: the bar ticks to Calibration Blue — the system's single
+   moment of color, used as a precision signal. */
+.loader__grade--done .loader__grade-fill {
+  background: var(--accent);
+}
+
+.loader__grade--done .loader__grade-pct {
+  color: var(--accent);
+}
+
+/* --- Responsive --- */
+
+/* Size and step follow the shared brand tokens (redefined at ≤900px in
+   index.css) — only the wrap width needs a local override. */
 @media (max-width: 900px) {
-  .loader__title-card {
-    min-height: clamp(18rem, 38dvh, 24rem);
-  }
-
   .loader__wordmark {
-    font-size: clamp(2.8rem, 14vw, 5.2rem);
-    max-width: min(12ch, calc(100vw - (var(--layout-pad) * 2)));
+    max-width: min(13ch, calc(100vw - (var(--layout-pad) * 2)));
   }
 }
+
+@media (max-width: 720px) {
+  .loader__hud-side {
+    display: none;
+  }
+
+  .loader__hud-row:last-child {
+    justify-content: center;
+  }
+}
+

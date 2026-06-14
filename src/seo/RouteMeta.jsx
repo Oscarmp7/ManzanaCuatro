@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router'
-import { getRouteMeta } from './routeMeta'
+import { getRouteMeta, getJsonLd, THEME_COLORS } from './routeMeta'
 
 const ensureMetaTag = (selector, attributes) => {
   let element = document.head.querySelector(selector)
@@ -15,6 +15,25 @@ const ensureMetaTag = (selector, attributes) => {
   })
 
   return element
+}
+
+const ensureJsonLd = (data) => {
+  let el = document.head.querySelector('script[type="application/ld+json"]')
+
+  if (data === null) {
+    if (el) {
+      el.remove()
+    }
+    return
+  }
+
+  if (!el) {
+    el = document.createElement('script')
+    el.type = 'application/ld+json'
+    document.head.appendChild(el)
+  }
+
+  el.textContent = JSON.stringify(data).replace(/</g, '\\u003c')
 }
 
 const ensureLinkTag = (selector, attributes) => {
@@ -37,7 +56,7 @@ export default function RouteMeta({ theme = 'dark' }) {
 
   useEffect(() => {
     const meta = getRouteMeta(location.pathname)
-    const themeColor = theme === 'light' ? '#f5f5f0' : '#050505'
+    const themeColor = THEME_COLORS[theme] ?? THEME_COLORS.dark
 
     document.title = meta.title
 
@@ -97,6 +116,8 @@ export default function RouteMeta({ theme = 'dark' }) {
       rel: 'canonical',
       href: meta.canonicalUrl,
     })
+
+    ensureJsonLd(getJsonLd(location.pathname))
   }, [location.pathname, theme])
 
   return null
