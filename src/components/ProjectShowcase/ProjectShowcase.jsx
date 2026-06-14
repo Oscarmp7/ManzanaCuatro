@@ -6,6 +6,89 @@ import { showcaseProjects, siteContent } from '../../data/siteContent'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import './ProjectShowcase.css'
 
+// ---------------------------------------------------------------------------
+// Editorial rhythm: full-width case, then a 2-up pair, then full again
+// (1 / 2-2 / 1 / 2-2 ...). A trailing single case renders full-width so a
+// pair never shows half-empty.
+// ---------------------------------------------------------------------------
+
+const groupCases = (projects) => {
+  const blocks = []
+  let index = 0
+
+  while (index < projects.length) {
+    const slot = blocks.length % 3 // 0: full · 1: pair · 2: pair
+    const remaining = projects.length - index
+    const take = slot === 0 || remaining === 1 ? 1 : 2
+
+    blocks.push({
+      type: take === 1 ? 'full' : 'pair',
+      items: projects.slice(index, index + take).map((project, offset) => ({
+        project,
+        number: index + offset + 1,
+      })),
+    })
+    index += take
+  }
+
+  return blocks
+}
+
+function CaseCard({ project, number, disciplineLabels, eager = false }) {
+  return (
+    <article className="projects-showcase__case">
+      <div className="projects-showcase__case-topline">
+        <span className="projects-showcase__case-index">
+          {String(number).padStart(2, '0')}
+        </span>
+        <span>{project.client}</span>
+        <span className="projects-showcase__case-dot" aria-hidden="true" />
+        <span>{project.year}</span>
+      </div>
+
+      <div className="projects-showcase__case-media">
+        <Link
+          to={`/proyectos/${project.slug}`}
+          className="projects-showcase__case-link projects-showcase__case-link--media"
+          aria-label={`Ver proyecto ${project.title}`}
+        >
+          <div className="projects-showcase__case-frame">
+            <img
+              src={project.poster}
+              alt={project.title}
+              className="projects-showcase__case-image"
+              loading={eager ? 'eager' : 'lazy'}
+              fetchPriority={eager ? 'high' : 'auto'}
+              decoding="async"
+            />
+            <div className="projects-showcase__case-body" aria-hidden="true">
+              <p className="projects-showcase__case-category">{project.category}</p>
+              <h2 className="projects-showcase__case-title">{project.title}</h2>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      <div className="projects-showcase__case-strip">
+        <ul className="projects-showcase__case-chips" aria-label="Servicios aplicados">
+          {project.disciplines.map((discipline) => (
+            <li key={discipline} className="projects-showcase__case-chip">
+              {disciplineLabels[discipline] ?? discipline}
+            </li>
+          ))}
+        </ul>
+        <Link
+          to={`/proyectos/${project.slug}`}
+          className="projects-showcase__case-link projects-showcase__case-link--cta"
+        >
+          Ver caso
+          <span className="projects-showcase__case-cta-icon" aria-hidden="true" />
+        </Link>
+      </div>
+    </article>
+  )
+}
+
 export default function ProjectShowcase() {
   const [activeFilter, setActiveFilter] = useState('all')
   const { projectsPage } = siteContent
@@ -18,6 +101,7 @@ export default function ProjectShowcase() {
     (project) => activeFilter === 'all' || project.disciplines.includes(activeFilter),
   )
 
+  const caseBlocks = groupCases(visibleProjects)
   const projectCount = String(visibleProjects.length).padStart(2, '0')
   const disciplineLabels = Object.fromEntries(
     projectsPage.filters
@@ -72,16 +156,16 @@ export default function ProjectShowcase() {
 
   return (
     <section className="projects-showcase" ref={sectionRef}>
+      <h1 className="sr-only">{projectsPage.title}</h1>
       <header className="projects-showcase__hero">
         <span className="projects-showcase__eyebrow">{projectsPage.eyebrow}</span>
-        <span className="projects-showcase__rail">{projectCount}</span>
+        <span className="projects-showcase__hero-rule" aria-hidden="true" />
+        <span className="projects-showcase__rail" aria-live="polite">
+          {projectCount}
+        </span>
       </header>
 
-      <nav
-        className="projects-showcase__filters"
-        role="toolbar"
-        aria-label="Filtrar proyectos"
-      >
+      <nav className="projects-showcase__filters" aria-label="Filtrar proyectos">
         {projectsPage.filters.map((filter) => (
           <button
             key={filter.id}
@@ -98,58 +182,26 @@ export default function ProjectShowcase() {
       </nav>
 
       <div className="projects-showcase__list" ref={listRef}>
-        {visibleProjects.map((project, index) => (
-          <article key={project.slug} className="projects-showcase__case">
-            <div className="projects-showcase__case-topline">
-              <span className="projects-showcase__case-index">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <span>{project.client}</span>
-              <span className="projects-showcase__case-dot" aria-hidden="true" />
-              <span>{project.year}</span>
-            </div>
+        {caseBlocks.map((block) => {
+          const blockKey = block.items.map(({ project }) => project.slug).join('+')
 
-            <div className="projects-showcase__case-media">
-              <Link
-                to={`/proyectos/${project.slug}`}
-                className="projects-showcase__case-link projects-showcase__case-link--media"
-                aria-label={`Ver proyecto ${project.title}`}
-              >
-                <div className="projects-showcase__case-frame">
-                  <img
-                    src={project.poster}
-                    alt={project.title}
-                    className="projects-showcase__case-image"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                    fetchPriority={index === 0 ? 'high' : 'auto'}
-                    decoding="async"
-                  />
-                  <div className="projects-showcase__case-body" aria-hidden="true">
-                    <p className="projects-showcase__case-category">{project.category}</p>
-                    <h2 className="projects-showcase__case-title">{project.title}</h2>
-                  </div>
-                </div>
-              </Link>
+          return (
+            <div
+              key={blockKey}
+              className={`projects-showcase__block projects-showcase__block--${block.type}`}
+            >
+              {block.items.map(({ project, number }) => (
+                <CaseCard
+                  key={project.slug}
+                  project={project}
+                  number={number}
+                  disciplineLabels={disciplineLabels}
+                  eager={number === 1}
+                />
+              ))}
             </div>
-
-            <div className="projects-showcase__case-strip">
-              <ul className="projects-showcase__case-chips" aria-label="Servicios aplicados">
-                {project.disciplines.map((discipline) => (
-                  <li key={discipline} className="projects-showcase__case-chip">
-                    {disciplineLabels[discipline] ?? discipline}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                to={`/proyectos/${project.slug}`}
-                className="projects-showcase__case-link projects-showcase__case-link--cta"
-              >
-                Ver caso
-                <span className="projects-showcase__case-cta-icon" aria-hidden="true" />
-              </Link>
-            </div>
-          </article>
-        ))}
+          )
+        })}
       </div>
     </section>
   )

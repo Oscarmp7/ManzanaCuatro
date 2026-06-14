@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { Link } from 'react-router'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { siteContent } from '../data/siteContent'
@@ -97,7 +96,7 @@ export default function StudioPage() {
       <section className="manifesto">
         <p className="manifesto__text">
           {manifestoWords.map((word, i) => (
-            <span key={i} className="manifesto__word">
+            <span key={`${word}-${i}`} className="manifesto__word">
               {word}
             </span>
           ))}
@@ -112,8 +111,8 @@ export default function StudioPage() {
             <span className="studio-about__eyebrow">{about.eyebrow}</span>
             <p className="studio-about__text">{about.text}</p>
             <ul className="studio-about__highlights">
-              {about.highlights.map((h, i) => (
-                <li key={i} className="studio-about__highlight">
+              {about.highlights.map((h) => (
+                <li key={h} className="studio-about__highlight">
                   <span className="studio-about__dot" />
                   {h}
                 </li>
@@ -167,9 +166,14 @@ export default function StudioPage() {
           ))}
         </ul>
         <div className="services__cta">
-          <Link to="/contacto" className="button button--primary">
+          <a
+            href={servicesSection.cta.href}
+            className="button button--primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {servicesSection.cta.label}
-          </Link>
+          </a>
         </div>
       </section>
     </div>

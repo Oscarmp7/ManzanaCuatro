@@ -11,11 +11,13 @@ const contactChannels = [
     label: 'Email',
     value: brand.email,
     href: `mailto:${brand.email}`,
+    external: false,
   },
   {
     label: 'Instagram',
     value: brand.instagramLabel,
     href: brand.instagramHref,
+    external: true,
   },
 ]
 
@@ -80,8 +82,8 @@ export default function ContactPage() {
             key={ch.label}
             className="contact__channel"
             href={ch.href}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={ch.external ? '_blank' : undefined}
+            rel={ch.external ? 'noopener noreferrer' : undefined}
           >
             <span className="contact__channel-label">{ch.label}</span>
             <span className="contact__channel-arrow" aria-hidden="true">→</span>
@@ -90,7 +92,7 @@ export default function ContactPage() {
         ))}
       </div>
 
-      <p className="contact__notes" style={{ marginTop: '3rem' }}>
+      <p className="contact__notes">
         {brand.domain}&ensp;·&ensp;{brand.location}
       </p>
 

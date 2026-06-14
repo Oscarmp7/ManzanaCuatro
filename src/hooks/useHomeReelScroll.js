@@ -6,8 +6,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 // Timing constants — reel section
 // ---------------------------------------------------------------------------
 
-const reelTransitionCount = 3 // REEL_TRANSITION_COUNT = reelProjects.length - 1
-const REEL_SETTLE_HOLD = 0.58
+const reelTransitionCount = 3 // must equal reelProjects.length - 1 (checked at runtime in dev)
+export const REEL_SETTLE_HOLD = 0.58
 
 const TITLE_FADE_OUT_START = 0.38
 const TITLE_FADE_OUT_END = 0.58
@@ -119,7 +119,16 @@ export default function useHomeReelScroll({
       activeReelIndexRef.current = 0
       colorStageActiveRef.current = false
       document.documentElement.dataset.homeReelTone = 'media'
-      return undefined
+      return () => {
+        delete document.documentElement.dataset.homeReelTone
+      }
+    }
+
+    if (import.meta.env.DEV && reelProjects.length - 1 !== reelTransitionCount) {
+      console.warn(
+        `useHomeReelScroll: reelTransitionCount (${reelTransitionCount}) is out of sync with `
+        + `reelProjects (${reelProjects.length}). Scroll timing will drift.`,
+      )
     }
 
     const section = sectionRef.current
@@ -127,17 +136,21 @@ export default function useHomeReelScroll({
     const titles = titleRefs.current.filter(Boolean)
     const colorStage = colorStageRef.current
     const galleryItems = (galleryItemRefs.current || []).filter(Boolean)
-    const titleWindow = section.querySelector('.home-reel__title-window')
-    const colorTitleShell = colorStage?.querySelector('.home-reel__color-title-shell')
 
     if (
       !section
       || !frames.length
       || !titles.length
       || !colorStage
-      || !colorTitleShell
       || !galleryItems.length
     ) {
+      return undefined
+    }
+
+    const titleWindow = section.querySelector('.home-reel__title-window')
+    const colorTitleShell = colorStage.querySelector('.home-reel__color-title-shell')
+
+    if (!colorTitleShell) {
       return undefined
     }
 
@@ -484,6 +497,7 @@ export default function useHomeReelScroll({
       activeReelIndexRef.current = 0
       colorStageActiveRef.current = false
       announceTone('media')
+      delete document.documentElement.dataset.homeReelTone
     }
   }, [ready, reducedMotion]) // eslint-disable-line react-hooks/exhaustive-deps
 }

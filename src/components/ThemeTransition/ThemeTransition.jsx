@@ -20,7 +20,7 @@ export default function useThemeTransition(onMidpoint) {
 
     // Dark → light: white overexposure flash. Light → dark: black shutter flash.
     const currentTheme = document.documentElement.dataset.theme
-    const flashColor = currentTheme === 'dark' ? '#ffffff' : '#0a0a0a'
+    const flashColor = currentTheme === 'dark' ? 'var(--flash-overexpose)' : 'var(--flash-shutter)'
 
     const veil = veilRef.current
     veil.style.background = flashColor

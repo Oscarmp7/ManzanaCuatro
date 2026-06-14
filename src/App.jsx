@@ -28,7 +28,7 @@ export default function App() {
       {curtain}
       <div className={`app-shell ${loaded ? 'app-shell--ready' : ''}`}>
         <ErrorBoundary>
-          <Suspense fallback={null}>
+          <Suspense fallback={<div className="route-fallback" aria-hidden="true" />}>
             <Routes>
               <Route element={<MainLayout />}>
                 <Route index element={<HomePage ready={loaded} />} />

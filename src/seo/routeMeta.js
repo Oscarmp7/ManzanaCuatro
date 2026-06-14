@@ -2,9 +2,16 @@ import { showcaseProjects } from '../data/siteContent.js'
 
 export const SITE_URL = 'https://manzanacuatro.com'
 
+// Single source of truth for the browser chrome color per theme.
+// Mirrors --bg in src/index.css.
+export const THEME_COLORS = {
+  dark: '#050505',
+  light: '#f5f5f0',
+}
+
 const BASE_TITLE = 'Manzana Cuatro'
 const BASE_DESCRIPTION =
-  'Estudio de produccion audiovisual en Santo Domingo para campanas, contenido social y marcas que necesitan una ejecucion visual premium.'
+  'Estudio de producción audiovisual en Santo Domingo para campañas, contenido social y marcas que necesitan una ejecución visual premium.'
 const DEFAULT_IMAGE = showcaseProjects[0]?.poster ?? `${SITE_URL}/favicon.svg`
 
 const normalizePath = (pathname = '/') => {
@@ -42,7 +49,7 @@ export function getRouteMeta(pathname) {
 
   if (normalizedPath === '/') {
     return createMeta({
-      title: `${BASE_TITLE} | Produccion audiovisual en Santo Domingo`,
+      title: `${BASE_TITLE} | Producción audiovisual en Santo Domingo`,
       description: BASE_DESCRIPTION,
       pathname: normalizedPath,
     })
@@ -52,7 +59,7 @@ export function getRouteMeta(pathname) {
     return createMeta({
       title: `Proyectos | ${BASE_TITLE}`,
       description:
-        'Casos seleccionados de produccion audiovisual, filmacion, fotografia y contenido de marca desarrollados por Manzana Cuatro.',
+        'Casos seleccionados de producción audiovisual, filmación, fotografía y contenido de marca desarrollados por Manzana Cuatro.',
       pathname: normalizedPath,
     })
   }
@@ -76,7 +83,7 @@ export function getRouteMeta(pathname) {
     return createMeta({
       title: `Estudio | ${BASE_TITLE}`,
       description:
-        'Conoce el enfoque, los servicios y la capacidad de estudio de Manzana Cuatro para marcas y campanas audiovisuales.',
+        'Conoce el enfoque, los servicios y la capacidad de estudio de Manzana Cuatro para marcas y campañas audiovisuales.',
       pathname: normalizedPath,
     })
   }
@@ -85,7 +92,7 @@ export function getRouteMeta(pathname) {
     return createMeta({
       title: `Contacto | ${BASE_TITLE}`,
       description:
-        'Habla con Manzana Cuatro para cotizaciones, contenido social, produccion comercial y campanas audiovisuales en RD.',
+        'Habla con Manzana Cuatro para cotizaciones, contenido social, producción comercial y campañas audiovisuales en RD.',
       pathname: normalizedPath,
     })
   }
@@ -93,7 +100,7 @@ export function getRouteMeta(pathname) {
   return createMeta({
     title: `404 | ${BASE_TITLE}`,
     description:
-      'La pagina solicitada no existe. Explora el portafolio o vuelve al inicio de Manzana Cuatro.',
+      'La página solicitada no existe. Explora el portafolio o vuelve al inicio de Manzana Cuatro.',
     pathname: normalizedPath,
     robots: 'noindex, nofollow',
   })
@@ -111,7 +118,6 @@ export function getJsonLd(pathname) {
           '@id': `${SITE_URL}/#organization`,
           name: BASE_TITLE,
           url: SITE_URL,
-          logo: `${SITE_URL}/og-image.jpg`,
           sameAs: ['https://instagram.com/manzanacuatro'],
         },
         {

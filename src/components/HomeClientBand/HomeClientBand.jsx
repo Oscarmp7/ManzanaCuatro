@@ -23,6 +23,7 @@ export default function HomeClientBand() {
           <ClientGroup />
           <ClientGroup ariaHidden />
           <ClientGroup ariaHidden />
+          <ClientGroup ariaHidden />
         </div>
       </div>
     </section>

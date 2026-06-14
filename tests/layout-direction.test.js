@@ -31,16 +31,30 @@ test('home page is rebuilt around a pinned reel and integrated end frame', () =>
   assert.doesNotMatch(homeSource, /from '\.\.\/components\/ProjectsPreview\/ProjectsPreview'/)
 })
 
-test('loader remains a full wordmark reveal without progress line chrome', () => {
+test('loader plays the grade reveal: log scene, mask wipe, colorist HUD and stage tokens', () => {
   const loaderSource = readFileSync(new URL('../src/components/Loader/Loader.jsx', import.meta.url), 'utf8')
   const loaderCss = readFileSync(new URL('../src/components/Loader/Loader.css', import.meta.url), 'utf8')
 
+  // Title card mirrors the home brand card content
   assert.match(loaderSource, /siteContent\.brand\.name/)
   assert.match(loaderSource, /siteContent\.hero\.eyebrow/)
   assert.match(loaderSource, /siteContent\.hero\.primaryCta\.label/)
-  assert.doesNotMatch(loaderSource, /loader__line/)
   assert.doesNotMatch(loaderSource, />M4</)
+
+  // Grade reveal structure
+  assert.match(loaderSource, /loader__scene--log/)
+  assert.match(loaderSource, /loader__hud/)
+  assert.match(loaderSource, /--grade-x/)
+  assert.match(loaderCss, /mask-image/)
+  assert.match(loaderCss, /var\(--grade-x\)/)
   assert.match(loaderCss, /\.loader__view/)
+  assert.match(loaderCss, /\.loader__grade-bar/)
+
+  // Theme-safe: the stage never reads themable text/background tokens
+  assert.match(loaderCss, /var\(--stage-bg\)/)
+  assert.match(loaderCss, /var\(--stage-text\)/)
+  assert.doesNotMatch(loaderCss, /color:\s*var\(--text\)/)
+  assert.doesNotMatch(loaderCss, /background:\s*#050505/)
 })
 
 test('home reel exposes pinned frames and fullscreen gallery with scroll-driven CSS variables', () => {

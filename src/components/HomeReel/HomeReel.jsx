@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import gsap from 'gsap'
 import { showcaseProjects, siteContent } from '../../data/siteContent'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
-import useHomeReelScroll, { TOTAL_TRANSITION_COUNT } from '../../hooks/useHomeReelScroll'
+import useHomeReelScroll, { TOTAL_TRANSITION_COUNT, REEL_SETTLE_HOLD } from '../../hooks/useHomeReelScroll'
 import './HomeReel.css'
 
 // ---------------------------------------------------------------------------
@@ -13,7 +13,6 @@ import './HomeReel.css'
 const reelProjects = showcaseProjects.slice(0, 4)
 const colorizationCases = siteContent.colorization.cases
 const REEL_TRANSITION_COUNT = reelProjects.length - 1
-const REEL_SETTLE_HOLD = 0.58
 const COLOR_STAGE_TRANSITION_COUNT = TOTAL_TRANSITION_COUNT - REEL_TRANSITION_COUNT - REEL_SETTLE_HOLD
 
 const titleFrames = [
@@ -201,7 +200,10 @@ export default function HomeReel({ ready = true }) {
                     '--gallery-x': `${i % 2 === 0 ? 100 : -100}%`,
                   }}
                 >
-                  {c.isVideo ? (
+                  {c.isVideo && safeColorStageActive ? (
+                    // Mounted only once the color stage is near: autoPlay videos
+                    // download regardless of preload, so gating saves 3 streams
+                    // on the initial page load.
                     <video
                       className="home-reel__gallery-media"
                       src={c.media}
@@ -215,7 +217,7 @@ export default function HomeReel({ ready = true }) {
                   ) : (
                     <img
                       className="home-reel__gallery-media"
-                      src={c.media}
+                      src={c.isVideo ? c.poster : c.media}
                       alt=""
                       loading="lazy"
                       decoding="async"
@@ -250,7 +252,12 @@ export default function HomeReel({ ready = true }) {
                 }}
               >
                 <p className="home-reel__meta">{item.meta}</p>
-                <h1 className="home-reel__title">{item.title}</h1>
+                {/* Only the brand card is the page h1; project cards are h2 */}
+                {index === 0 ? (
+                  <h1 className="home-reel__title">{item.title}</h1>
+                ) : (
+                  <h2 className="home-reel__title">{item.title}</h2>
+                )}
                 {index === 0 ? (
                   <button
                     type="button"

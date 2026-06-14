@@ -21,14 +21,20 @@
   color: var(--text-muted);
 }
 
+/* Vertical hairline between eyebrow and count — slate language, no badge */
+.projects-showcase__hero-rule {
+  width: 1px;
+  height: 0.9em;
+  background: color-mix(in srgb, var(--separator) 70%, transparent);
+}
+
+/* Count as a slate figure: Bebas, no pill */
 .projects-showcase__rail {
-  font-family: var(--font-hud);
-  font-size: 0.66rem;
-  letter-spacing: 0.14em;
-  color: color-mix(in srgb, var(--text-muted) 50%, transparent);
-  padding: 0.2em 0.56em;
-  border: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
-  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--text) 32%, var(--bg));
 }
 
 /* --------------------------------------------------------------- Filters */
@@ -39,41 +45,44 @@
   z-index: 5;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 0;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid color-mix(in srgb, var(--separator) 58%, transparent);
 }
 
+/* Filter tabs: 1px underline markers on the baseline — the active filter
+   "lights up" a segment of the track's own separator line. No pills. */
 .projects-showcase__filter {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
-  padding: 0.28rem 0.9rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
+  padding: 0.5rem 0.1rem;
+  margin-right: clamp(1rem, 2.5vw, 2rem);
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
   background: transparent;
-  color: color-mix(in srgb, var(--text) 55%, var(--bg));
+  color: color-mix(in srgb, var(--text) 48%, var(--bg));
   cursor: pointer;
   transition:
-    border-color 0.2s var(--ease-out),
-    background-color 0.2s var(--ease-out),
-    color 0.2s var(--ease-out);
+    color 0.2s var(--ease-out),
+    border-bottom-color 0.2s var(--ease-out);
 }
 
-.projects-showcase__filter:hover,
+.projects-showcase__filter:hover {
+  color: color-mix(in srgb, var(--text) 80%, var(--bg));
+  border-bottom-color: color-mix(in srgb, var(--text) 24%, transparent);
+}
+
 .projects-showcase__filter:focus-visible {
   color: var(--text);
-  border-color: color-mix(in srgb, var(--text) 14%, transparent);
-  background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
 }
 
 .projects-showcase__filter--active {
-  border-color: color-mix(in srgb, var(--text) 20%, transparent);
-  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
   color: var(--text);
+  border-bottom-color: var(--text);
 }
 
 .projects-showcase__filter-label {
@@ -90,13 +99,23 @@
   gap: 0;
 }
 
-.projects-showcase__case {
-  padding: clamp(1.75rem, 3.5vw, 2.75rem) 0;
+/* Editorial rhythm blocks: full-width scene, then a 2-up pair */
+.projects-showcase__block {
   border-top: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
 }
 
-.projects-showcase__case:last-child {
+.projects-showcase__block:last-child {
   border-bottom: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
+}
+
+.projects-showcase__block--pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.projects-showcase__case {
+  padding: clamp(1.75rem, 3.5vw, 2.75rem) 0;
 }
 
 /* Scene number row above image */
@@ -217,26 +236,30 @@
   padding-top: 0.85rem;
 }
 
+/* Discipline metadata: inline list with 1px dividers — frame metadata strip,
+   not a tag cloud. Non-interactive by design. */
 .projects-showcase__case-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  align-items: center;
+  gap: 0;
   list-style: none;
 }
 
 .projects-showcase__case-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 1.7rem;
-  padding: 0.22rem 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--separator) 82%, transparent);
-  border-radius: 999px;
   font-family: var(--font-hud);
   font-size: 0.6rem;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--text) 62%, var(--bg));
-  background: color-mix(in srgb, var(--bg-elevated) 78%, transparent);
+  color: color-mix(in srgb, var(--text) 58%, var(--bg));
+}
+
+.projects-showcase__case-chip + .projects-showcase__case-chip {
+  margin-left: 0.6rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid color-mix(in srgb, var(--separator) 70%, transparent);
 }
 
 /* Text CTA */
@@ -290,6 +313,20 @@
   transform: scaleX(1.31);
 }
 
+/* Pair cases: tighter scale — detail shots next to the master shot */
+
+.projects-showcase__block--pair .projects-showcase__case-frame {
+  aspect-ratio: 3 / 2;
+}
+
+.projects-showcase__block--pair .projects-showcase__case-title {
+  font-size: clamp(1.9rem, 3.4vw, 3.6rem);
+}
+
+.projects-showcase__block--pair .projects-showcase__case-body {
+  padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.1rem, 2.4vw, 2rem);
+}
+
 /* --------------------------------------------------------------- 960px */
 
 @media (max-width: 960px) {
@@ -329,17 +366,28 @@
     flex-shrink: 0;
   }
 
-  .projects-showcase__case-frame {
+  .projects-showcase__case-frame,
+  .projects-showcase__block--pair .projects-showcase__case-frame {
     aspect-ratio: 4 / 3;
   }
 
-  .projects-showcase__case-title {
+  .projects-showcase__case-title,
+  .projects-showcase__block--pair .projects-showcase__case-title {
     font-size: clamp(2rem, 11vw, 3.5rem);
   }
 
   .projects-showcase__case-strip {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  /* Pairs stack to one column; restore the divider between the two cases */
+  .projects-showcase__block--pair {
+    grid-template-columns: 1fr;
+  }
+
+  .projects-showcase__block--pair .projects-showcase__case + .projects-showcase__case {
+    border-top: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
   }
 }
 

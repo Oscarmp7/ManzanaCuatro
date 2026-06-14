@@ -84,7 +84,7 @@
   background: var(--accent-hover);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s var(--ease-out);
   z-index: -1;
 }
 
@@ -147,7 +147,7 @@
   font-size: 0.875rem;
   color: var(--text-dim);
   flex-shrink: 0;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+  transition: transform 0.25s var(--ease-out), color 0.2s ease;
 }
 
 .contact__channel:hover .contact__channel-arrow,
@@ -166,6 +166,7 @@
 /* --- Notes / footnote --- */
 
 .contact__notes {
+  margin-top: 3rem;
   font-family: var(--font-hud);
   font-size: 0.68rem;
   letter-spacing: 0.08em;
@@ -176,14 +177,18 @@
 
 /* --- Responsive --- */
 
+/* Allow wrapping below 900px: nowrap + fluid clamp risks horizontal overflow
+   on mid-size viewports with this title length. */
+@media (max-width: 900px) {
+  .contact__title {
+    white-space: normal;
+  }
+}
+
 @media (max-width: 600px) {
   .contact__cta {
     width: 100%;
     text-align: center;
-  }
-
-  .contact__title {
-    white-space: normal;
   }
 
   .contact__channel-label {

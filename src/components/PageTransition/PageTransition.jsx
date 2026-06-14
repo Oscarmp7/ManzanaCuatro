@@ -17,12 +17,14 @@ export default function PageTransition({ children }) {
       return
     }
 
+    // 'instant' overrides the html scroll-behavior: smooth so route changes
+    // never animate the scroll position (which would fire ScrollTriggers).
     if (reducedMotion) {
-      window.scrollTo(0, 0)
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
       return
     }
 
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
 
     // Overlay slides out right, revealing content left-to-right (compositor-only: transform)
     const ctx = gsap.context(() => {

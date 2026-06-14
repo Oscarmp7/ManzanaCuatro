@@ -13,7 +13,9 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    console.error(error)
+    if (import.meta.env.DEV) {
+      console.error(error)
+    }
   }
 
   handleReload() {
@@ -30,14 +32,14 @@ export default class ErrorBoundary extends Component {
     return (
       <section className="page app-error" role="alert">
         <p className="app-error__eyebrow">Runtime fallback</p>
-        <h1>La vista encontro un error inesperado.</h1>
+        <h1>La vista encontró un error inesperado.</h1>
         <p>
-          La navegacion principal sigue disponible, pero esta ruta necesita recargarse para
+          La navegación principal sigue disponible, pero esta ruta necesita recargarse para
           recuperarse.
         </p>
         <div className="app-error__actions">
           <button className="button button--primary" type="button" onClick={this.handleReload}>
-            Recargar pagina
+            Recargar página
           </button>
           <a className="button button--ghost" href="/">
             Volver al inicio

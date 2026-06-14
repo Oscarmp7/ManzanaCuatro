@@ -19,6 +19,7 @@ test('readme documents the actual project instead of the stock vite template', (
 
   assert.match(readmeSource, /Manzana Cuatro/)
   assert.match(readmeSource, /npm run build/)
-  assert.match(readmeSource, /GitHub Pages/)
+  assert.match(readmeSource, /Vercel/)
+  assert.doesNotMatch(readmeSource, /GitHub Pages/)
   assert.doesNotMatch(readmeSource, /This template provides a minimal setup/)
 })

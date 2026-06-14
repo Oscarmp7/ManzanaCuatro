@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router'
-import { getRouteMeta, getJsonLd } from './routeMeta'
+import { getRouteMeta, getJsonLd, THEME_COLORS } from './routeMeta'
 
 const ensureMetaTag = (selector, attributes) => {
   let element = document.head.querySelector(selector)
@@ -56,7 +56,7 @@ export default function RouteMeta({ theme = 'dark' }) {
 
   useEffect(() => {
     const meta = getRouteMeta(location.pathname)
-    const themeColor = theme === 'light' ? '#f5f5f0' : '#050505'
+    const themeColor = THEME_COLORS[theme] ?? THEME_COLORS.dark
 
     document.title = meta.title
 

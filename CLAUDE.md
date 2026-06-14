@@ -26,10 +26,16 @@ src/
 ├── index.css                  # Variables CSS globales (colores, fuentes, layout)
 ├── main.jsx                   # Entry point
 │
+├── contexts/
+│   └── ThemeContext.jsx       # Context { theme, toggleTheme } + useThemeContext()
+│
 ├── hooks/
 │   ├── useTheme.js            # Tema light/dark con localStorage + system preference
 │   ├── usePrefersReducedMotion.js  # Media query (prefers-reduced-motion)
 │   └── useHomeReelScroll.js   # GSAP ScrollTrigger logic extraída de HomeReel
+│
+├── utils/
+│   └── math.js                # clamp / lerp / mapRange
 │
 ├── layouts/
 │   └── MainLayout.jsx         # Envuelve todas las páginas: Nav + PageTransition + Footer
@@ -37,15 +43,14 @@ src/
 ├── components/
 │   ├── Nav/                   # Navegación fija, theme dock, menú mobile accesible
 │   ├── Footer/                # Pie de página
-│   ├── Loader/                # Splash screen GSAP (1.05s) al inicio
+│   ├── Loader/                # ⭐ Grade Reveal: title-card en log + wipe de grade + HUD (~4.1s, backdrop separado)
 │   ├── ErrorBoundary/         # Class component para capturar errores de render
-│   ├── PageTransition/        # Wipe GSAP (0.58s) al cambiar de ruta
-│   ├── ThemeTransition/       # Hook que devuelve { curtain JSX, play() } para el velo de tema
+│   ├── PageTransition/        # Wipe GSAP (1s) al cambiar de ruta + scroll instant a top
+│   ├── ThemeTransition/       # Hook { curtain JSX, play() } — flash veil 0.1s in / 0.18s out
 │   ├── TextSwap/              # Microinteracción: hover anima caracteres (CSS puro)
-│   ├── ComparisonSlider/      # Slider before/after con sincronización de video por RAF
-│   ├── ProjectShowcase/       # Grid editorial con filtros por disciplina
+│   ├── ProjectShowcase/       # Casos en ritmo editorial 1/2-2 + filtros underline (sin pills)
 │   ├── HomeReel/              # ⚠️ Componente crítico. Scroll experience + scroll hint HUD
-│   ├── HomeClientBand/        # Ticker infinito CSS de clientes
+│   ├── HomeClientBand/        # Ticker infinito CSS de clientes (4 grupos, -25% loop)
 │   └── HomeEndFrame/          # CTA final de la home
 │
 ├── pages/
@@ -87,16 +92,26 @@ tests/                         # 9 archivos de test con Node --test
 
 ## Sistema de Temas
 
+- Script inline en `index.html` aplica `data-theme` ANTES del primer paint (evita FOUC)
 - Hook `useTheme` → lee localStorage (`m4-theme`) → fallback a system preference
 - Aplica `data-theme="dark|light"` en `<html>`
 - CSS responde a ese atributo con las variables en `index.css`
-- Animación de cambio: `ThemeTransition` (hook) → velo (`veilRef`) + orbe (`orbRef`) → 0.78s total → llama `toggle()` en midpoint (0.3s)
-- `App.jsx` gestiona `theme` y pasa `toggleTheme` a `MainLayout` → `Nav`
+- Animación de cambio: `ThemeTransition` (hook) → flash veil (overexpose a light / shutter a dark), 0.1s in → `toggle()` → 0.18s out
+- `App.jsx` gestiona `theme` y lo expone vía `ThemeContext` (`useThemeContext()`)
 
 **Variables clave del tema:**
 ```css
 --bg, --bg-elevated, --text, --text-muted, --text-dim
 --accent (#2f78ff), --separator, --curtain, --overlay
+```
+
+**Tokens theme-independent (escena cinematográfica):**
+```css
+--stage-bg (#050505), --stage-text (#f5f5f0)   /* loader + reel siempre oscuros */
+--brand-display-size, --brand-card-step        /* wordmark compartido loader↔home (handoff pixel-perfect) */
+--flash-overexpose, --flash-shutter            /* theme veil */
+--z-nav, --z-theme-dock, --z-mobile-menu, --z-nav-open,
+--z-page-wipe, --z-theme-veil, --z-loader, --z-skip-link
 ```
 
 ---
@@ -160,8 +175,8 @@ La lógica de scroll está extraída en `useHomeReelScroll.js` — HomeReel.jsx 
 **Fases del scroll (progress 0–1)**:
 1. **Reels** (0–3 transiciones): 4 proyectos con clip-path reveal suave
 2. **Color Stage**: wash desaturado fade in, tone cambia a `pure`
-3. **Color Title**: título entra desde arriba con rotación + escala + blur
-4. **Comparison**: slider before/after desliza entre 3 casos de colorización
+3. **Color Title**: título entra desde arriba con rotación + escala + blur, luego fill con mask wipe
+4. **Gallery**: 3 casos de colorización entran fullscreen alternando derecha/izquierda (videos gateados — solo montan cuando la color stage está activa)
 
 **Scroll Hint** (`.home-reel__scroll-hint`):
 - "SCROLL" en Space Mono + línea animada con gota que cae
@@ -184,16 +199,20 @@ La lógica de scroll está extraída en `useHomeReelScroll.js` — HomeReel.jsx 
 **Modificar SOLO aquí para cambiar contenido.** Estructura:
 
 ```js
-showcaseProjects[]     // 5 proyectos con slug, title, client, year, poster, video, disciplines, etc.
-siteContent.brand      // Nombre, email, teléfono, redes
+showcaseProjects[]     // 5 proyectos: slug, title, client, category, year, poster, video?, disciplines, summary, scope, details
+siteContent.brand      // Nombre, email, WhatsApp, Instagram, dominio, ubicación
 siteContent.nav[]      // Links de navegación
 siteContent.clients[]  // Lista de clientes para el ticker
-siteContent.hero       // Copy de la home
-siteContent.colorization // Datos del slider (reels array: before/after videos, metadata)
+siteContent.hero       // eyebrow, title, text, primaryCta, availability
+siteContent.projectsPage // eyebrow, title (h1 sr-only), filters[{id,label}]
+siteContent.about      // Copy del studio
 siteContent.stats[]    // Estadísticas del estudio
-siteContent.services[] // 5 servicios
+siteContent.services[] // 5 servicios + servicesSection (CTA → WhatsApp)
+siteContent.colorization // título + cases[] de la galería (title, client, tags, media, poster, isVideo)
 siteContent.contact    // Copy de contacto
 ```
+
+> Nota: el archivo se podó en 2026-06 — solo quedan campos que la UI renderiza (o SEO consume, como `summary`). No agregar campos sin consumidor.
 
 **Disciplinas válidas**: `'production' | 'color' | 'photo' | 'content'`
 
@@ -209,7 +228,9 @@ siteContent.contact    // Copy de contacto
 
 **Rutas con SEO configurado**: `/`, `/proyectos`, `/proyectos/:slug`, `/studio`, `/contacto`
 
-**Falta**: JSON-LD/structured data, robots.txt, sitemap.xml
+**Implementado**: JSON-LD (runtime + inyectado en HTML estático), robots.txt, sitemap.xml (con lastmod), og:locale, theme-color compartido vía `THEME_COLORS` en `routeMeta.js`
+
+**Pendiente (depende de contenido del cliente)**: og-image 1200×630 real, logo para Organization schema
 
 ---
 
@@ -224,7 +245,7 @@ npm run lint         # ESLint
 ```
 
 **Deploy**:
-- Vite base dinámica: `/` en Vercel (default), `/ManzanaCuatro/` en GitHub Pages (si `DEPLOY_TARGET=github-pages`)
+- Target único: Vercel (base `/`). El dual-target de GitHub Pages se eliminó en 2026-06 (BrowserRouter nunca soportó el subpath)
 - Branch activa: `feat/m4-redesign` → merge target: `master`
 
 ---
@@ -241,10 +262,10 @@ window.addEventListener('home-reel-stagechange', handler)
 // Cleanup: window.removeEventListener(...)
 ```
 
-### Video Sync en ComparisonSlider
-- RAF loop: cada frame verifica si `follower.currentTime` se aleja >0.08s del `leader`
-- El video `after` está siempre muted
-- Se cancela el RAF en cleanup del useEffect
+### Gating de videos en HomeReel
+- Reel: solo el frame activo ±1 monta `<video>` (`shouldRenderReelMotionMedia`); el resto usa `<img poster>`
+- Galería de colorización: los `<video>` solo montan cuando `colorStageActive` (autoPlay fuerza descarga aunque `preload="none"`)
+- Loader Grade Reveal: dos capas del mismo title-card (log arriba, graded debajo), mask wipe horizontal vía `--grade-x`, HUD con timecode GSAP
 
 ### Meta Tags en Runtime
 ```js

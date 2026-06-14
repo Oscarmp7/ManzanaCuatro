@@ -40,17 +40,6 @@ test('project detail and 404 pages use dedicated resilient page wrappers', () =>
   assert.match(notFoundSource, /className="page not-found-page"/)
 })
 
-test('github pages workflow runs quality gates and builds with the repository base path', () => {
-  const workflowSource = readFileSync(
-    new URL('../.github/workflows/deploy-pages.yml', import.meta.url),
-    'utf8',
-  )
-
-  assert.match(workflowSource, /run: npm run lint/)
-  assert.match(workflowSource, /run: npm test/)
-  assert.match(workflowSource, /DEPLOY_TARGET: github-pages/)
-})
-
 test('project hygiene ignores local env files and vercel browser cookie artifacts', () => {
   const gitignoreSource = readFileSync(new URL('../.gitignore', import.meta.url), 'utf8')
 

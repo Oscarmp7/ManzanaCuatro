@@ -27,3 +27,14 @@ vercel-cookie.txt
 *.sw?
 
 .vercel
+
+# Local tooling / caches (not part of the project)
+.agents/
+.mateo/
+.impeccable/
+.playwright-mcp/
+.claude/skills/
+skills-lock.json
+
+# Claude Code local settings (contains tokens — never commit)
+.claude/settings.local.json

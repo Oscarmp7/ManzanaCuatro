@@ -44,7 +44,7 @@ export default function HomeEndFrame() {
         >
           WhatsApp
         </a>
-        <span className="home-end__legal">(c) Manzana Cuatro {currentYear}</span>
+        <span className="home-end__legal">&copy; Manzana Cuatro {currentYear}</span>
       </div>
     </section>
   )

@@ -48,13 +48,15 @@
   color: color-mix(in srgb, var(--text) 38%, transparent);
 }
 
+/* 4 identical groups: shifting by exactly one group (25%) keeps the loop
+   seamless and covers ultrawide viewports. */
 @keyframes home-client-band-scroll {
   from {
     transform: translateX(0);
   }
 
   to {
-    transform: translateX(-33.333%);
+    transform: translateX(-25%);
   }
 }
 

@@ -100,7 +100,7 @@ export default function ProjectDetailPage() {
 
   // Scroll to top on slug change
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }, [slug])
 
   if (!project) {

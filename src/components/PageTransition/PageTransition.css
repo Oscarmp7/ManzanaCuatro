@@ -8,7 +8,7 @@
   background: var(--curtain, #0a0a0a);
   transform: translateX(100%);
   pointer-events: none;
-  z-index: 1000;
+  z-index: var(--z-page-wipe);
   will-change: transform;
 }
 

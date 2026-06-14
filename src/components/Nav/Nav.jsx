@@ -197,7 +197,7 @@ export default function Nav() {
                 type="button"
                 className={`nav__menu${menuOpen ? ' nav__menu--open' : ''}`}
                 onClick={() => setMenuOpen((value) => !value)}
-                aria-label={menuOpen ? 'Cerrar menu' : 'Abrir menu'}
+                aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                 aria-expanded={menuOpen}
                 aria-controls="nav-mobile-panel"
               >
@@ -243,7 +243,7 @@ export default function Nav() {
         >
           <div className="nav__mobile-inner">
             <h2 id="nav-mobile-title" className="nav__mobile-title">
-              Menu
+              Menú
             </h2>
             <Link to="/" className="nav__mobile-link nav__mobile-link--brand" onClick={closeMenu}>
               Manzana Cuatro

@@ -1,7 +1,7 @@
 .theme-veil {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: var(--z-theme-veil);
   display: none;
   pointer-events: none;
   will-change: opacity;

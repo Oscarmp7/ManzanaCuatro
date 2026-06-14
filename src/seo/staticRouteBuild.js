@@ -1,5 +1,5 @@
 import { showcaseProjects } from '../data/siteContent.js'
-import { getRouteMeta } from './routeMeta.js'
+import { getRouteMeta, getJsonLd, THEME_COLORS } from './routeMeta.js'
 
 const HEAD_CLOSE_TAG = '</head>'
 
@@ -34,11 +34,12 @@ export function getStaticRouteEntries() {
     ...showcaseProjects.map((project) => `/proyectos/${project.slug}`),
   ].map((pathname) => ({
     pathname,
-    meta: getRouteMeta(pathname === '/404' ? '/ruta-inexistente' : pathname),
+    meta: getRouteMeta(pathname),
+    jsonLd: getJsonLd(pathname),
   }))
 }
 
-export function renderRouteHtml(template, meta) {
+export function renderRouteHtml(template, meta, jsonLd = null) {
   let html = template
 
   html = replaceOrAppend(html, /<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(meta.title)}</title>`)
@@ -103,5 +104,18 @@ export function renderRouteHtml(template, meta) {
     buildCanonicalTag(meta.canonicalUrl),
   )
 
+  if (jsonLd) {
+    const jsonLdTag = `<script type="application/ld+json">${
+      JSON.stringify(jsonLd).replace(/</g, '\\u003c')
+    }</script>`
+    html = replaceOrAppend(
+      html,
+      /<script type="application\/ld\+json">[\s\S]*?<\/script>/,
+      jsonLdTag,
+    )
+  }
+
   return html
 }
+
+export { THEME_COLORS }

@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { getStaticRouteEntries, renderRouteHtml } from '../src/seo/staticRouteBuild.js'
+import { getStaticRouteEntries, renderRouteHtml, THEME_COLORS } from '../src/seo/staticRouteBuild.js'
 
 const currentFile = fileURLToPath(import.meta.url)
 const rootDir = path.resolve(path.dirname(currentFile), '..')
@@ -24,9 +24,9 @@ const template = await readFile(templatePath, 'utf8')
 const routeEntries = getStaticRouteEntries()
 
 await Promise.all(
-  routeEntries.map(async ({ pathname, meta }) => {
+  routeEntries.map(async ({ pathname, meta, jsonLd }) => {
     const outputPath = resolveOutputPath(pathname)
-    const html = renderRouteHtml(template, { ...meta, themeColor: '#050505' })
+    const html = renderRouteHtml(template, { ...meta, themeColor: THEME_COLORS.dark }, jsonLd)
 
     await mkdir(path.dirname(outputPath), { recursive: true })
     await writeFile(outputPath, html)

@@ -39,7 +39,7 @@ test('navigation uses a clean home overlay and distributed top bar', () => {
   assert.match(navCss, /\.nav__menu--open\s+\.nav__menu-bar--middle[\s\S]*opacity:\s*0/)
   assert.match(navCss, /\.nav__menu--open\s+\.nav__menu-bar--bottom[\s\S]*rotate\(-45deg\)/)
   assert.match(navSource, /menuOpen \? ' nav--menu-open' : ''/)
-  assert.match(navCss, /\.nav--menu-open[\s\S]*z-index:\s*160/)
+  assert.match(navCss, /\.nav--menu-open[\s\S]*z-index:\s*var\(--z-nav-open\)/)
   assert.match(navCss, /\.nav__item:is\(:hover,\s*:focus-visible\)\s+\.text-swap__layer[\s\S]*transition-delay:/)
   assert.doesNotMatch(navCss, /\.nav__inner--home/)
   assert.doesNotMatch(navCss, /\.nav__inner--interior/)
