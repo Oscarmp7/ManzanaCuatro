@@ -4,11 +4,17 @@ import Footer from '../components/Footer/Footer'
 import PageTransition from '../components/PageTransition/PageTransition'
 import RouteMeta from '../seo/RouteMeta.jsx'
 import { useThemeContext } from '../contexts/ThemeContext'
+import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import useLenis from '../hooks/useLenis'
 
 export default function MainLayout() {
   const { theme } = useThemeContext()
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const reducedMotion = usePrefersReducedMotion()
+
+  // Global smooth scroll (disabled under reduced motion).
+  useLenis(!reducedMotion)
 
   return (
     <>

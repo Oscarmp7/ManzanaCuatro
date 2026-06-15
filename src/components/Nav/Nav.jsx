@@ -5,6 +5,7 @@ import { siteContent } from '../../data/siteContent'
 import TextSwap from '../TextSwap/TextSwap'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import { useThemeContext } from '../../contexts/ThemeContext'
+import { getLenis } from '../../hooks/useLenis'
 import './Nav.css'
 
 export default function Nav() {
@@ -53,8 +54,16 @@ export default function Nav() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
+    // Lenis drives scroll via its own rAF loop and ignores body overflow:hidden,
+    // so pause it while the mobile menu is open to stop background scroll-through.
+    const lenis = getLenis()
+    if (lenis) {
+      if (menuOpen) lenis.stop()
+      else lenis.start()
+    }
     return () => {
       document.body.style.overflow = ''
+      getLenis()?.start()
     }
   }, [menuOpen])
 

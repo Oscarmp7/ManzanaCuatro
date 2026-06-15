@@ -2,6 +2,7 @@ import { useRef, useLayoutEffect } from 'react'
 import { useLocation } from 'react-router'
 import gsap from 'gsap'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
+import { getLenis } from '../../hooks/useLenis'
 import './PageTransition.css'
 
 export default function PageTransition({ children }) {
@@ -10,6 +11,7 @@ export default function PageTransition({ children }) {
   const location = useLocation()
   const isFirstRender = useRef(true)
   const reducedMotion = usePrefersReducedMotion()
+  const sharedNav = Boolean(location.state?.sharedThumb)
 
   useLayoutEffect(() => {
     if (isFirstRender.current) {
@@ -17,14 +19,25 @@ export default function PageTransition({ children }) {
       return
     }
 
-    // 'instant' overrides the html scroll-behavior: smooth so route changes
-    // never animate the scroll position (which would fire ScrollTriggers).
+    // Reset scroll on route change. Prefer Lenis so its virtual position stays
+    // in sync; fall back to the native instant scroll (also overrides the html
+    // scroll-behavior: smooth so route changes never animate the scroll).
+    const resetScroll = () => {
+      const lenis = getLenis()
+      if (lenis) lenis.scrollTo(0, { immediate: true })
+      else window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    }
+
     if (reducedMotion) {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+      resetScroll()
       return
     }
 
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    resetScroll()
+
+    // Shared-element navigation (card → detail) plays its own FLIP on the hero;
+    // skip the wipe so it never covers the morphing element.
+    if (sharedNav) return
 
     // Overlay slides out right, revealing content left-to-right (compositor-only: transform)
     const ctx = gsap.context(() => {
@@ -36,7 +49,7 @@ export default function PageTransition({ children }) {
     }, stageRef)
 
     return () => ctx.revert()
-  }, [location.pathname, reducedMotion])
+  }, [location.pathname, reducedMotion, sharedNav])
 
   return (
     <div ref={stageRef} className="page-stage" data-route={location.pathname}>

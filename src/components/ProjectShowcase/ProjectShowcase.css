@@ -2,6 +2,9 @@
   width: min(100%, calc(var(--layout-max) + (var(--layout-pad) * 2)));
   margin: 0 auto;
   padding: clamp(5rem, 10vw, 7.5rem) var(--layout-pad) clamp(5rem, 8vw, 7rem);
+
+  /* Darkness of the list-view hover video overlay — tune to taste (0–1). */
+  --projects-bg-overlay: 0.7;
 }
 
 /* ------------------------------------------------------------------ Hero */
@@ -29,12 +32,203 @@
 }
 
 /* Count as a slate figure: Bebas, no pill */
+/* Dynamic result counter — HUD metadata language */
 .projects-showcase__rail {
+  font-family: var(--font-hud);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* View switcher — VIEW label + three icon buttons, pushed to the right */
+
+.projects-showcase__view-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.projects-showcase__view-label {
+  font-family: var(--font-hud);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: 0.15rem;
+}
+
+.projects-showcase__view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+  border-radius: 2px;
+  background: transparent;
+  color: color-mix(in srgb, var(--text) 45%, var(--bg));
+  cursor: pointer;
+  transition:
+    color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out),
+    background-color 0.2s var(--ease-out);
+}
+
+.projects-showcase__view-btn svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.projects-showcase__view-btn:hover {
+  color: color-mix(in srgb, var(--text) 80%, var(--bg));
+  border-color: color-mix(in srgb, var(--text) 30%, transparent);
+}
+
+.projects-showcase__view-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.projects-showcase__view-btn--active {
+  color: var(--text);
+  border-color: var(--text);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+/* Hero tools cluster — live search + view switch, pushed to the right */
+.projects-showcase__tools {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin-left: auto;
+}
+
+.projects-showcase__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 2rem;
+  padding: 0 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+  border-radius: 2px;
+  color: var(--text-muted);
+  transition:
+    border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.projects-showcase__search:focus-within {
+  border-color: color-mix(in srgb, var(--text) 35%, transparent);
+  color: var(--text);
+}
+
+.projects-showcase__search-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+}
+
+.projects-showcase__search-input {
+  width: clamp(7rem, 14vw, 12rem);
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.projects-showcase__search-input::placeholder {
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+}
+
+.projects-showcase__search-input:focus-visible {
+  outline: none;
+}
+
+/* We render our own clear button */
+.projects-showcase__search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.projects-showcase__search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s var(--ease-out);
+}
+
+.projects-showcase__search-clear svg {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.projects-showcase__search-clear:hover,
+.projects-showcase__search-clear:focus-visible {
+  color: var(--text);
+}
+
+/* Empty state */
+.projects-showcase__empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+}
+
+.projects-showcase__empty-title {
   font-family: var(--font-display);
-  font-size: 1.4rem;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  color: color-mix(in srgb, var(--text) 32%, var(--bg));
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+.projects-showcase__empty-text {
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  max-width: 34ch;
+}
+
+.projects-showcase__empty-reset {
+  margin-top: 0.6rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--text) 30%, transparent);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-hud);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out);
+}
+
+.projects-showcase__empty-reset:hover,
+.projects-showcase__empty-reset:focus-visible {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  border-color: var(--text);
 }
 
 /* --------------------------------------------------------------- Filters */
@@ -97,21 +291,35 @@
 .projects-showcase__list {
   display: grid;
   gap: 0;
+  position: relative;
 }
 
-/* Editorial rhythm blocks: full-width scene, then a 2-up pair */
-.projects-showcase__block {
+/* Large view — one full-width cinematic case per row (default) */
+.projects-showcase__list--large {
+  grid-template-columns: 1fr;
+}
+
+.projects-showcase__list--large .projects-showcase__case {
   border-top: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
 }
 
-.projects-showcase__block:last-child {
+.projects-showcase__list--large .projects-showcase__case:last-child {
   border-bottom: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
 }
 
-.projects-showcase__block--pair {
-  display: grid;
+/* Grid view — two equal columns */
+.projects-showcase__list--grid {
   grid-template-columns: 1fr 1fr;
   column-gap: clamp(1.25rem, 2.5vw, 2rem);
+  border-top: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
+}
+
+/* List view — single column of compact rows */
+.projects-showcase__list--list {
+  grid-template-columns: 1fr;
+  border-top: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
 }
 
 .projects-showcase__case {
@@ -178,6 +386,22 @@
     filter 0.45s var(--ease-out);
 }
 
+/* Thumbnail video — plays on hover (large/grid), fades over the poster */
+.projects-showcase__case-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+
+.projects-showcase__case--playing .projects-showcase__case-video {
+  opacity: 1;
+}
+
 /* Title overlaid on image */
 
 .projects-showcase__case-body {
@@ -194,7 +418,9 @@
   );
   color: rgba(245, 245, 240, 0.95);
   transform: translateY(0);
-  transition: transform 0.5s var(--ease-out);
+  transition:
+    transform 0.5s var(--ease-out),
+    opacity 0.45s var(--ease-out);
 }
 
 .projects-showcase__case-category {
@@ -224,6 +450,12 @@
 .projects-showcase__case-link--media:hover .projects-showcase__case-body,
 .projects-showcase__case-link--media:focus-visible .projects-showcase__case-body {
   transform: translateY(-4px);
+}
+
+/* Fade the title out ONLY while the hover video is actually playing, so the
+   motion leads — keyboard focus / no-video cards keep their visible title. */
+.projects-showcase__case--playing .projects-showcase__case-body {
+  opacity: 0;
 }
 
 /* Strip below image: chips + CTA */
@@ -313,18 +545,176 @@
   transform: scaleX(1.31);
 }
 
-/* Pair cases: tighter scale — detail shots next to the master shot */
+/* Grid view: tighter scale — detail shots beside the master shot */
 
-.projects-showcase__block--pair .projects-showcase__case-frame {
+.projects-showcase__list--grid .projects-showcase__case-frame {
   aspect-ratio: 3 / 2;
 }
 
-.projects-showcase__block--pair .projects-showcase__case-title {
+.projects-showcase__list--grid .projects-showcase__case-title {
   font-size: clamp(1.9rem, 3.4vw, 3.6rem);
 }
 
-.projects-showcase__block--pair .projects-showcase__case-body {
+.projects-showcase__list--grid .projects-showcase__case-body {
   padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.1rem, 2.4vw, 2rem);
+}
+
+/* ------------------------------------------------------------- List rows */
+
+.projects-showcase__row + .projects-showcase__row {
+  border-top: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
+}
+
+.projects-showcase__row-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1.4fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1.15rem, 2.6vw, 1.9rem) clamp(0.5rem, 1.5vw, 1rem);
+  margin-inline: clamp(-1rem, -1.5vw, -0.5rem);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Dim the rest of the list so the hovered row leads (pointer devices only) */
+@media (hover: hover) {
+  .projects-showcase__list--list:hover .projects-showcase__row-link {
+    opacity: 0.5;
+    transition: opacity 0.3s var(--ease-out);
+  }
+
+  .projects-showcase__list--list:hover .projects-showcase__row-link:hover {
+    opacity: 1;
+  }
+}
+
+.projects-showcase__row-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.projects-showcase__row-index {
+  font-family: var(--font-hud);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.projects-showcase__row-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.6vw, 3.2rem);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projects-showcase__row-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.projects-showcase__row-client {
+  font-family: var(--font-hud);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Campaign / category in accent — mirrors the reference's blue sub-label */
+.projects-showcase__row-category {
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projects-showcase__row-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+/* Discipline tags as bordered HUD chips */
+.projects-showcase__row-tag {
+  font-family: var(--font-hud);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text) 72%, var(--bg));
+  padding: 0.4rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--separator) 70%, transparent);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------- List hover background (video) */
+
+/* Rows sit above the full-bleed hover video */
+.projects-showcase__row {
+  position: relative;
+  z-index: 1;
+}
+
+.projects-showcase__bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.projects-showcase__bg-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.projects-showcase__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, calc(var(--projects-bg-overlay) + 0.04)) 0%,
+    rgba(0, 0, 0, var(--projects-bg-overlay)) 100%
+  );
+}
+
+/* While the dark hover video is active, force row text to stage (light) colours
+   so it stays legible over the video in BOTH themes (not just dark). */
+.projects-showcase__list[data-bg-active='true'] .projects-showcase__row-title {
+  color: var(--stage-text);
+}
+
+.projects-showcase__list[data-bg-active='true'] .projects-showcase__row-index,
+.projects-showcase__list[data-bg-active='true'] .projects-showcase__row-client {
+  color: color-mix(in srgb, var(--stage-text) 68%, transparent);
+}
+
+.projects-showcase__list[data-bg-active='true'] .projects-showcase__row-tag {
+  color: color-mix(in srgb, var(--stage-text) 82%, transparent);
+  border-color: color-mix(in srgb, var(--stage-text) 32%, transparent);
 }
 
 /* --------------------------------------------------------------- 960px */
@@ -381,13 +771,51 @@
     align-items: flex-start;
   }
 
-  /* Pairs stack to one column; restore the divider between the two cases */
-  .projects-showcase__block--pair {
+  /* Hero wraps so the tools cluster drops below the count if cramped */
+  .projects-showcase__hero {
+    flex-wrap: wrap;
+  }
+
+  .projects-showcase__tools {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .projects-showcase__search {
+    flex: 1;
+  }
+
+  .projects-showcase__search-input {
+    width: 100%;
+  }
+
+  .projects-showcase__view-label {
+    display: none;
+  }
+
+  /* Grid collapses to a single column; restore the row divider */
+  .projects-showcase__list--grid {
     grid-template-columns: 1fr;
   }
 
-  .projects-showcase__block--pair .projects-showcase__case + .projects-showcase__case {
+  .projects-showcase__list--grid .projects-showcase__case + .projects-showcase__case {
     border-top: 1px solid color-mix(in srgb, var(--separator) 65%, transparent);
+  }
+
+  /* List rows shed secondary columns on small screens — index + title only */
+  .projects-showcase__row-meta,
+  .projects-showcase__row-tags {
+    display: none;
+  }
+
+  .projects-showcase__row-link {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .projects-showcase__row-title {
+    font-size: clamp(1.6rem, 7vw, 2.6rem);
   }
 }
 

@@ -1,9 +1,11 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useLayoutEffect } from 'react'
 import { useParams, Link } from 'react-router'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { showcaseProjects, siteContent } from '../data/siteContent'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import { getLenis } from '../hooks/useLenis'
+import { consumeSharedThumb } from '../transitions/sharedThumbStore'
 import './ProjectDetailPage.css'
 
 
@@ -12,6 +14,7 @@ export default function ProjectDetailPage() {
   const reducedMotion = usePrefersReducedMotion()
 
   const containerRef = useRef(null)
+  const heroRef = useRef(null)
   const heroImgRef = useRef(null)
   const titleRef = useRef(null)
   const metaRef = useRef(null)
@@ -20,6 +23,40 @@ export default function ProjectDetailPage() {
 
   const projectIndex = showcaseProjects.findIndex((p) => p.slug === slug)
   const project = showcaseProjects[projectIndex]
+
+  // Shared-element transition: grow the hero from the clicked card's thumbnail
+  // rect (FLIP). Runs before paint so there's no flash at the natural size.
+  useLayoutEffect(() => {
+    if (!project || reducedMotion) return undefined
+    const data = consumeSharedThumb(slug)
+    const hero = heroRef.current
+    if (!data || !hero) return undefined
+    const target = hero.getBoundingClientRect()
+    if (!target.width || !target.height) return undefined
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        hero,
+        {
+          x: data.rect.left - target.left,
+          y: data.rect.top - target.top,
+          scaleX: data.rect.width / target.width,
+          scaleY: data.rect.height / target.height,
+          transformOrigin: 'top left',
+        },
+        {
+          x: 0,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 0.85,
+          ease: 'expo.out',
+          clearProps: 'transform',
+        },
+      )
+    }, hero)
+    return () => ctx.revert()
+  }, [slug, project, reducedMotion])
 
   useEffect(() => {
     if (!project || reducedMotion) return undefined
@@ -98,9 +135,11 @@ export default function ProjectDetailPage() {
     return () => ctx.revert()
   }, [project, reducedMotion])
 
-  // Scroll to top on slug change
+  // Scroll to top on slug change (Lenis-aware to avoid position desync)
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    const lenis = getLenis()
+    if (lenis) lenis.scrollTo(0, { immediate: true })
+    else window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }, [slug])
 
   if (!project) {
@@ -119,7 +158,7 @@ export default function ProjectDetailPage() {
   return (
     <div ref={containerRef} className="page page--project-detail">
       {/* Hero */}
-      <section className="project-detail__hero">
+      <section className="project-detail__hero" ref={heroRef}>
         <img
           ref={heroImgRef}
           className="project-detail__hero-img"
@@ -130,10 +169,49 @@ export default function ProjectDetailPage() {
           decoding="async"
         />
         <div className="project-detail__hero-overlay" />
+
+        {/* Prev / next, overlaid on the image so it's obvious + cinematic */}
+        <Link
+          to={`/proyectos/${prevProject.slug}`}
+          className="project-detail__hero-nav project-detail__hero-nav--prev"
+          aria-label={`Caso anterior: ${prevProject.title}`}
+        >
+          <span className="project-detail__hero-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <polyline points="15 5 8 12 15 19" />
+            </svg>
+          </span>
+          <span className="project-detail__hero-nav-label">
+            <span className="project-detail__hero-nav-kind">Anterior</span>
+            <span className="project-detail__hero-nav-title">{prevProject.title}</span>
+          </span>
+        </Link>
+
+        <Link
+          to={`/proyectos/${nextProject.slug}`}
+          className="project-detail__hero-nav project-detail__hero-nav--next"
+          aria-label={`Caso siguiente: ${nextProject.title}`}
+        >
+          <span className="project-detail__hero-nav-label">
+            <span className="project-detail__hero-nav-kind">Siguiente</span>
+            <span className="project-detail__hero-nav-title">{nextProject.title}</span>
+          </span>
+          <span className="project-detail__hero-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <polyline points="9 5 16 12 9 19" />
+            </svg>
+          </span>
+        </Link>
       </section>
 
       {/* Body */}
       <div className="project-detail__body">
+        {/* Back to gallery */}
+        <Link to="/proyectos" className="project-detail__back">
+          <span className="project-detail__back-arrow" aria-hidden="true" />
+          Volver a proyectos
+        </Link>
+
         {/* Header */}
         <h1 className="project-detail__title" ref={titleRef}>
           <span className="project-detail__title-inner">{project.title}</span>
@@ -192,22 +270,6 @@ export default function ProjectDetailPage() {
             Escríbenos por WhatsApp
           </a>
         </div>
-
-        {/* Project navigation */}
-        <nav className="project-detail__nav">
-          <Link
-            className="project-detail__nav-link project-detail__nav-link--prev"
-            to={`/proyectos/${prevProject.slug}`}
-          >
-            <span aria-hidden="true">←</span> {prevProject.title}
-          </Link>
-          <Link
-            className="project-detail__nav-link project-detail__nav-link--next"
-            to={`/proyectos/${nextProject.slug}`}
-          >
-            {nextProject.title} <span aria-hidden="true">→</span>
-          </Link>
-        </nav>
       </div>
     </div>
   )

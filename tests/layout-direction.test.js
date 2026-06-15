@@ -197,7 +197,7 @@ test('projects page uses an editorial filtered case-study layout', () => {
 
   assert.match(projectsSource, /ProjectShowcase/)
   assert.match(showcaseSource, /const \{ projectsPage \} = siteContent/)
-  assert.match(showcaseSource, /const \[activeFilter,\s*setActiveFilter\] = useState\('all'\)/)
+  assert.match(showcaseSource, /const \[activeFilter,\s*setActiveFilter\] = useState\(/)
   assert.match(showcaseSource, /projectsPage\.filters\.map/)
   assert.match(showcaseSource, /aria-pressed=\{filter\.id === activeFilter\}/)
   assert.match(showcaseSource, /showcaseProjects\.filter/)

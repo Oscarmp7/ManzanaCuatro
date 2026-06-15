@@ -116,7 +116,9 @@
 .nav__theme-dock {
   position: fixed;
   top: 50%;
-  left: var(--layout-pad);
+  /* Hug the viewport edge so the rail never collides with page content,
+     which is inset by --layout-pad (always wider than this on desktop). */
+  left: 0.9rem;
   transform: translateY(-50%) rotate(-90deg);
   transform-origin: left center;
   z-index: var(--z-theme-dock);

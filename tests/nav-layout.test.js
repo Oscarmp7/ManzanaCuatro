@@ -21,7 +21,9 @@ test('navigation uses a clean home overlay and distributed top bar', () => {
   assert.match(navCss, /\.nav__grid/)
   assert.match(navCss, /grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/)
   assert.match(navCss, /\.nav__theme-dock[\s\S]*position:\s*fixed/)
-  assert.match(navCss, /\.nav__theme-dock[\s\S]*left:\s*var\(--layout-pad\)/)
+  // Dock hugs the viewport edge (not --layout-pad) so it never collides with
+  // page content, which is inset by --layout-pad on desktop.
+  assert.match(navCss, /\.nav__theme-dock[\s\S]*left:\s*0\.9rem/)
   assert.match(navCss, /\.nav__theme-dock[\s\S]*top:\s*50%/)
   assert.match(navCss, /\.nav__theme-dock[\s\S]*transform:\s*translateY\(-50%\)\s*rotate\(-90deg\)/)
   assert.match(navCss, /\.nav__theme-dock[\s\S]*transform-origin:\s*left center/)
