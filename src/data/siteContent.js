@@ -121,11 +121,22 @@ export const siteContent = {
     { label: 'Contacto', href: '/contacto' },
   ],
   clients: [
+    // Placeholder/demo roster: none of these are confirmed clients yet. Replace
+    // with the real roster (and logos) before launch. `logo` (image) is supported
+    // per entry; without it the name renders as a monochrome wordmark. This array
+    // is shared by StudioClients (logo wall) and HomeClientBand (home ticker).
     { name: 'La Bodega' },
     { name: 'Shibuya' },
     { name: 'Changan Dominicana' },
     { name: 'Farma Extra' },
     { name: 'Porsche Center Santo Domingo' },
+    { name: 'Mamey' },
+    { name: 'Vértice' },
+    { name: 'Aurora' },
+    { name: 'Lumen' },
+    { name: 'Distrito 27' },
+    { name: 'Solera' },
+    { name: 'Cibao' },
   ],
   hero: {
     eyebrow: 'Producción audiovisual / RD',

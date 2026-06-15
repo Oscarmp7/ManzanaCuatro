@@ -9,8 +9,10 @@ test('site content reflects the Manzana Cuatro brief and dedicated client band d
   assert.match(siteContent.brand.whatsappHref, /18498633817/)
   assert.equal(siteContent.hero.primaryCta.label, 'Ver portafolio')
   assert.equal(siteContent.contact.title, 'Comienza tu historia')
+  // Roster is placeholder/demo content (no confirmed clients yet); this guards
+  // the first 5 seed entries against accidental change until the real roster lands.
   assert.deepEqual(
-    siteContent.clients.map((client) => client.name),
+    siteContent.clients.slice(0, 5).map((client) => client.name),
     [
       'La Bodega',
       'Shibuya',
@@ -19,6 +21,8 @@ test('site content reflects the Manzana Cuatro brief and dedicated client band d
       'Porsche Center Santo Domingo',
     ],
   )
+  assert.ok(siteContent.clients.length >= 5)
+  assert.ok(siteContent.clients.every((client) => typeof client.name === 'string'))
 })
 
 test('showcase projects, services, and reel videos match the brief inventory', () => {

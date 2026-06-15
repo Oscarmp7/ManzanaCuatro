@@ -6,19 +6,15 @@
 }
 
 .studio-clients__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 2fr);
-  gap: clamp(2rem, 5vw, 4rem);
   max-width: var(--layout-max);
   margin: 0 auto;
   padding: 0 var(--layout-pad);
 }
 
-/* Sticky header while the grid scrolls past */
+/* Centered heading on top (logo-wall style) */
 .studio-clients__head {
-  position: sticky;
-  top: calc(var(--nav-height) + 2rem);
-  align-self: start;
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
 .studio-clients__eyebrow {
@@ -33,55 +29,87 @@
 
 .studio-clients__title {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  font-size: clamp(1.8rem, 4vw, 3rem);
   line-height: 1;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   color: var(--text);
+  max-width: 26ch;
+  margin: 0 auto;
 }
 
-/* Logo grid with divider lines */
+/* Logo wall. Predictable column count (6 desktop, stepping to 4/3/2) via a
+   percentage flex-basis; flex-grow lets a partial last row stretch to fill so
+   the divider grid always closes (no ragged right edge). It reads as a fully
+   even grid when the client count is a multiple of the active column count;
+   the seed set is 12, which tiles evenly at 6/4/3/2. A non-multiple count just
+   stretches the final row's cells wider, still closed but less uniform.
+   Container draws the top/left edge; each cell draws its right/bottom edge. */
 .studio-clients__grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   border-top: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
   border-left: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
 }
 
 .studio-clients__cell {
+  /* Predictable column count via a percentage basis; flex-grow lets the last
+     (partial) row stretch to full width so the wall is always closed.
+     The -1px slack absorbs sub-pixel rounding so exactly N fit per row. */
+  flex: 1 1 calc(100% / 6 - 1px);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: clamp(7rem, 14vw, 10rem);
+  min-height: clamp(7rem, 13vw, 9.5rem);
   padding: 1.5rem;
   border-right: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
 }
 
-/* Text "logos": muted (grayscale) → accent on hover */
+/* Responsive column counts (all divisors of 12 → perfect rows for the seed set) */
+@media (max-width: 980px) {
+  .studio-clients__cell {
+    flex-basis: calc(100% / 4 - 1px);
+  }
+}
+
+@media (max-width: 620px) {
+  .studio-clients__cell {
+    flex-basis: calc(100% / 3 - 1px);
+  }
+}
+
+@media (max-width: 400px) {
+  .studio-clients__cell {
+    flex-basis: calc(100% / 2 - 1px);
+  }
+}
+
+/* Text "logos": muted monochrome → brighten on hover (stays grayscale like the ref) */
 .studio-clients__logo {
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.4vw, 2.1rem);
+  font-size: clamp(1.25rem, 2.2vw, 1.9rem);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   text-align: center;
-  color: color-mix(in srgb, var(--text) 38%, var(--bg));
-  transition: color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+  line-height: 1;
+  color: color-mix(in srgb, var(--text) 55%, transparent);
+  transition: color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
 }
 
 .studio-clients__cell:hover .studio-clients__logo {
-  color: var(--accent);
+  color: var(--text);
   transform: translateY(-2px);
 }
 
-/* Image logos: grayscale → color on hover */
+/* Image logos: grayscale → full color on hover */
 .studio-clients__logo-img {
   max-width: 100%;
   max-height: 3rem;
   object-fit: contain;
   filter: grayscale(1);
-  opacity: 0.55;
-  transition: filter 0.25s var(--ease-out), opacity 0.25s var(--ease-out);
+  opacity: 0.5;
+  transition: filter 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
 }
 
 .studio-clients__cell:hover .studio-clients__logo-img {
@@ -89,11 +117,12 @@
   opacity: 1;
 }
 
-@media (max-width: 760px) {
-  .studio-clients__inner {
-    grid-template-columns: 1fr;
+@media (prefers-reduced-motion: reduce) {
+  .studio-clients__logo,
+  .studio-clients__logo-img {
+    transition: none;
   }
-  .studio-clients__head {
-    position: static;
+  .studio-clients__cell:hover .studio-clients__logo {
+    transform: none;
   }
 }
