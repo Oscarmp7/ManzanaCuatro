@@ -75,3 +75,19 @@ test('studio marquee: scroll-velocity ticker, accent word + circular separator',
   assert.match(css, /prefers-reduced-motion/)
   assert.match(read('../src/pages/StudioPage.jsx'), /StudioMarquee/)
 })
+
+// ----------------------------------------------------------------- Block 4
+
+test('studio services carousel: cards + capabilities, arrows, drag, snap, stagger', () => {
+  const sv = read('../src/components/studio/StudioServices.jsx')
+  assert.match(sv, /scrollByCard/)
+  assert.match(sv, /onPointerDown/)
+  assert.match(sv, /capabilities\.map/)
+  assert.match(sv, /studio-services__caps/)
+  const css = read('../src/components/studio/StudioServices.css')
+  assert.match(css, /scroll-snap-type/)
+  // data extended with descriptions + capabilities
+  const data = read('../src/data/siteContent.js')
+  assert.match(data, /capabilities:/)
+  assert.match(read('../src/pages/StudioPage.jsx'), /StudioServices/)
+})
