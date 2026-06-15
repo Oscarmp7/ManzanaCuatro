@@ -60,16 +60,13 @@ test('reel modal is a lazy, accessible custom player with scroll-lock', () => {
 
 // ----------------------------------------------------------------- Block 2
 
-test('studio manifesto: two-column reveal + stats count-up, refs & reduced-motion', () => {
+test('studio manifesto: MAJOR-style about — left label + two text columns', () => {
   const m = read('../src/components/studio/StudioManifesto.jsx')
-  assert.match(m, /studio-manifesto__cols/)
+  assert.match(m, /studio-manifesto__label/) // left section label
+  assert.match(m, /studio-manifesto__cols/) // two-column text block
   // reveal targets collected via refs (no global selectors)
   assert.match(m, /addReveal/)
   assert.match(m, /ScrollTrigger/)
-  // robust count-up (tween a proxy → write textContent)
-  assert.match(m, /onUpdate/)
-  // reduced motion shows the final number, not 0
-  assert.match(m, /reduced \? stat\.value : '0'/)
 
   const page = read('../src/pages/StudioPage.jsx')
   assert.match(page, /<h1 className="studio__sr-title">/)
