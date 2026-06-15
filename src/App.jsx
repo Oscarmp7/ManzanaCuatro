@@ -14,13 +14,31 @@ const StudioPage = lazy(() => import('./pages/StudioPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
+// The full grade-reveal loader only plays on the first load of the session.
+// On later reloads within the same session we skip straight to the composed
+// app; internal route changes use the lightweight PageTransition wipe.
+const sessionAlreadyLoaded = () => {
+  try {
+    return sessionStorage.getItem('m4-loaded') === '1'
+  } catch {
+    return false
+  }
+}
+
 export default function App() {
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(sessionAlreadyLoaded)
   const { theme, toggle } = useTheme()
   const { curtain, play } = useThemeTransition(toggle)
 
   const handleThemeToggle = useCallback(() => play(), [play])
-  const handleLoaderComplete = useCallback(() => setLoaded(true), [])
+  const handleLoaderComplete = useCallback(() => {
+    try {
+      sessionStorage.setItem('m4-loaded', '1')
+    } catch {
+      /* ignore storage failures */
+    }
+    setLoaded(true)
+  }, [])
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme: handleThemeToggle }}>
