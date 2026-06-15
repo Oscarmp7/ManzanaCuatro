@@ -1,0 +1,68 @@
+.studio-reel-cursor {
+  --lens-d: clamp(8rem, 14vw, 12rem);
+  --lens-scale: 1;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.studio-reel-cursor__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Circular window clipped to the lens; positioned on the cursor */
+.studio-reel-cursor__lens,
+.studio-reel-cursor__ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--lens-d);
+  height: var(--lens-d);
+  border-radius: 50%;
+  transform: translate(calc(var(--mx, 50%) - var(--lens-d) / 2), calc(var(--my, 50%) - var(--lens-d) / 2))
+    scale(var(--lens-scale));
+  will-change: transform;
+}
+
+.studio-reel-cursor__lens {
+  overflow: hidden;
+}
+
+/* The filter lives on this small (lens-sized) element — cheap to compute —
+   while the media inside is hero-sized and offset to the cursor slice. */
+.studio-reel-cursor__warp {
+  position: absolute;
+  inset: 0;
+  filter: url(#studio-reel-ripple);
+}
+
+.studio-reel-cursor__media {
+  position: absolute;
+  width: var(--hero-w, 100vw);
+  height: var(--hero-h, 100vh);
+  object-fit: cover;
+  left: calc(-1 * (var(--mx, 50%) - var(--lens-d) / 2));
+  top: calc(-1 * (var(--my, 50%) - var(--lens-d) / 2));
+  filter: saturate(1.05) contrast(1.04);
+}
+
+/* "Ver reel" outline ring riding on top of the lens (not filtered) */
+.studio-reel-cursor__ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--stage-text) 80%, transparent);
+}
+
+.studio-reel-cursor__label {
+  font-family: var(--font-hud);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--stage-text);
+}

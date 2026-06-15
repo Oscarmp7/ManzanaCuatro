@@ -24,6 +24,20 @@ test('studio hero plays an ambient reel loop and opens the reel modal', () => {
   assert.match(hero, /reduced \? \(/)
   // tagline clip-path reveal
   assert.match(hero, /clipPath: 'inset\(100% 0 0 0\)'/)
+  // custom reel lens cursor is wired in
+  assert.match(hero, /StudioReelCursor/)
+})
+
+test('studio reel cursor: fine-pointer-gated lens with SVG ripple on the media', () => {
+  const cur = read('../src/components/studio/StudioReelCursor.jsx')
+  assert.match(cur, /\(hover: hover\) and \(pointer: fine\)/) // not on touch
+  assert.match(cur, /prefers-reduced-motion/) // disabled under reduced motion
+  assert.match(cur, /feDisplacementMap/) // real image displacement, not an overlay
+  assert.match(cur, /studio-reel-cursor__lens/)
+  const css = read('../src/components/studio/StudioReelCursor.css')
+  // filter sits on the small lens-sized warp, not the full-size media (perf)
+  assert.match(css, /\.studio-reel-cursor__warp/)
+  assert.match(css, /filter: url\(#studio-reel-ripple\)/)
 })
 
 test('reel modal is a lazy, accessible custom player with scroll-lock', () => {
