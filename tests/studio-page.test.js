@@ -61,3 +61,17 @@ test('studio manifesto: two-column reveal + stats count-up, refs & reduced-motio
   assert.match(page, /<h1 className="studio__sr-title">/)
   assert.match(page, /StudioManifesto/)
 })
+
+// ----------------------------------------------------------------- Block 3
+
+test('studio marquee: scroll-velocity ticker, accent word + circular separator', () => {
+  const mq = read('../src/components/studio/StudioMarquee.jsx')
+  assert.match(mq, /ScrollTrigger\.getVelocity/)
+  assert.match(mq, /gsap\.ticker\.add/)
+  assert.match(mq, /gsap\.utils\.wrap/)
+  assert.match(mq, /studio-marquee__word--accent/)
+  assert.match(mq, /studio-marquee__sep/)
+  const css = read('../src/components/studio/StudioMarquee.css')
+  assert.match(css, /prefers-reduced-motion/)
+  assert.match(read('../src/pages/StudioPage.jsx'), /StudioMarquee/)
+})

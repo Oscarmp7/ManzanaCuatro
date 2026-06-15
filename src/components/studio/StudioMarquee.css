@@ -1,0 +1,61 @@
+.studio-marquee {
+  width: 100%;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+  background: var(--bg);
+  border-top: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+}
+
+.studio-marquee__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.studio-marquee__group {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.studio-marquee__word {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+  padding: 0 clamp(1rem, 2.5vw, 2rem);
+}
+
+.studio-marquee__word--accent {
+  color: var(--accent);
+}
+
+/* Blue circular separator between repetitions */
+.studio-marquee__sep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: clamp(2.25rem, 4vw, 3.25rem);
+  height: clamp(2.25rem, 4vw, 3.25rem);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+}
+
+.studio-marquee__sep svg {
+  width: 45%;
+  height: 45%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-marquee__track {
+    /* Static: show the first repetitions, no movement */
+    transform: none !important;
+  }
+}

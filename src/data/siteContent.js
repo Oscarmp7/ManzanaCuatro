@@ -229,5 +229,7 @@ export const siteContent = {
       ambientSrc: portfolioPlaceholderVideos[2],
       fullSrc: portfolioPlaceholderVideos[2],
     },
+    values: ['Crear', 'Mover', 'Acelerar'],
+    valuesAccent: 'Mover',
   },
 }

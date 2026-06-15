@@ -5,6 +5,7 @@ import { siteContent } from '../data/siteContent'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import StudioHero from '../components/studio/StudioHero'
 import StudioManifesto from '../components/studio/StudioManifesto'
+import StudioMarquee from '../components/studio/StudioMarquee'
 import './StudioPage.css'
 
 export default function StudioPage() {
@@ -43,6 +44,8 @@ export default function StudioPage() {
       <StudioHero />
 
       <StudioManifesto />
+
+      <StudioMarquee />
 
       {/* ── Services (Block 4 will turn this into a carousel) ── */}
       <div className="separator" />
