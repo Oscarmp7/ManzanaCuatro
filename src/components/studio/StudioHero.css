@@ -1,0 +1,142 @@
+/* Studio hero — cinematic dark stage over our own reel loop */
+.studio-hero {
+  position: relative;
+  width: 100%;
+  min-height: 92vh;
+  min-height: 92dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  /* Always a dark stage regardless of theme (text sits over video) */
+  background: var(--stage-bg);
+  color: var(--stage-text);
+}
+
+.studio-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.studio-hero__bg-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.03);
+}
+
+.studio-hero__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* Full-area trigger that opens the reel modal */
+.studio-hero__trigger {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.studio-hero__trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -6px;
+}
+
+/* Visual content sits above the trigger but lets clicks pass through */
+.studio-hero__content {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+  width: 100%;
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  padding: 0 var(--layout-pad) clamp(3rem, 8vw, 6rem);
+}
+
+.studio-hero__eyebrow {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--stage-text) 78%, transparent);
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.studio-hero__title {
+  display: block;
+  overflow: hidden;
+  line-height: 0.86;
+}
+
+.studio-hero__title-inner {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 13vw, 12rem);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--stage-text);
+}
+
+.studio-hero__tagline {
+  max-width: 30ch;
+  margin-top: clamp(1rem, 2.5vw, 1.75rem);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.4vw, 1.9rem);
+  line-height: 1.25;
+  color: color-mix(in srgb, var(--stage-text) 90%, transparent);
+}
+
+.studio-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--font-hud);
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stage-text);
+}
+
+.studio-hero__play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid color-mix(in srgb, var(--stage-text) 55%, transparent);
+  border-radius: 50%;
+  transition: background-color 0.25s var(--ease-out);
+}
+
+.studio-hero__play svg {
+  width: 1rem;
+  height: 1rem;
+  margin-left: 2px;
+}
+
+/* The trigger is the hover target; lift the play cue when the hero is hovered */
+.studio-hero__trigger:hover ~ .studio-hero__content .studio-hero__play,
+.studio-hero__trigger:focus-visible ~ .studio-hero__content .studio-hero__play {
+  background: color-mix(in srgb, var(--accent) 85%, transparent);
+  border-color: transparent;
+}
+
+@media (max-width: 600px) {
+  .studio-hero {
+    min-height: 84vh;
+    min-height: 84dvh;
+  }
+}

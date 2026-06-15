@@ -3,71 +3,20 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { siteContent } from '../data/siteContent'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import StudioHero from '../components/studio/StudioHero'
+import StudioManifesto from '../components/studio/StudioManifesto'
 import './StudioPage.css'
 
 export default function StudioPage() {
   const sectionRef = useRef(null)
-  const aboutImageRef = useRef(null)
-  const statRefs = useRef([])
   const reducedMotion = usePrefersReducedMotion()
 
-  const { about, stats, services, servicesSection } = siteContent
-  const manifestoWords = about.title.replace(/\.$/, '').split(' ')
+  const { about, services, servicesSection } = siteContent
 
+  // Services list stagger (becomes the Block 4 carousel later).
   useEffect(() => {
-    if (reducedMotion) {
-      return undefined
-    }
-
+    if (reducedMotion) return undefined
     const ctx = gsap.context(() => {
-      // --- Manifesto word-by-word reveal ---
-      gsap.to('.manifesto__word', {
-        opacity: 1,
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: '.manifesto',
-          start: 'top 80%',
-          end: 'bottom 50%',
-          scrub: true,
-        },
-      })
-
-      // --- About image parallax ---
-      if (aboutImageRef.current) {
-        gsap.fromTo(
-          aboutImageRef.current,
-          { yPercent: -10 },
-          {
-            yPercent: 10,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: aboutImageRef.current.parentElement,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
-            },
-          }
-        )
-      }
-
-      // --- Stats counter animation ---
-      stats.forEach((stat, i) => {
-        const el = statRefs.current[i]
-        if (!el) return
-        gsap.fromTo(
-          el,
-          { textContent: 0 },
-          {
-            textContent: stat.value,
-            duration: 1.5,
-            ease: 'expo.out',
-            snap: { textContent: 1 },
-            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-          }
-        )
-      })
-
-      // --- Services stagger fade-in ---
       gsap.from('.services__item', {
         opacity: 0,
         y: 20,
@@ -81,9 +30,8 @@ export default function StudioPage() {
         },
       })
     }, sectionRef)
-
     return () => ctx.revert()
-  }, [reducedMotion, stats])
+  }, [reducedMotion])
 
   return (
     <div
@@ -92,68 +40,11 @@ export default function StudioPage() {
     >
       <h1 className="studio__sr-title">{about.eyebrow}</h1>
 
-      {/* ── Section 1: Manifesto ── */}
-      <section className="manifesto">
-        <p className="manifesto__text">
-          {manifestoWords.map((word, i) => (
-            <span key={`${word}-${i}`} className="manifesto__word">
-              {word}
-            </span>
-          ))}
-        </p>
-      </section>
+      <StudioHero />
 
-      {/* ── Section 2: About ── */}
-      <div className="separator" />
-      <section className="studio-about">
-        <div className="studio-about__grid">
-          <div className="studio-about__content">
-            <span className="studio-about__eyebrow">{about.eyebrow}</span>
-            <p className="studio-about__text">{about.text}</p>
-            <ul className="studio-about__highlights">
-              {about.highlights.map((h) => (
-                <li key={h} className="studio-about__highlight">
-                  <span className="studio-about__dot" />
-                  {h}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="studio-about__image-wrap">
-            <img
-              ref={aboutImageRef}
-              src={about.image}
-              alt="Manzana Cuatro studio"
-              className="studio-about__image"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        </div>
-      </section>
+      <StudioManifesto />
 
-      {/* ── Section 3: Stats ── */}
-      <div className="separator" />
-      <section className="stats">
-        <div className="stats__grid">
-          {stats.map((stat, i) => (
-            <div key={stat.label} className="stats__item">
-              <div className="stats__number-row">
-                <span
-                  className="stats__value"
-                  ref={(el) => (statRefs.current[i] = el)}
-                >
-                  0
-                </span>
-                <span className="stats__suffix">{stat.suffix}</span>
-              </div>
-              <span className="stats__label">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Section 4: Services ── */}
+      {/* ── Services (Block 4 will turn this into a carousel) ── */}
       <div className="separator" />
       <section className="services">
         <span className="services__eyebrow">{servicesSection.eyebrow}</span>

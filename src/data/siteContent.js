@@ -218,4 +218,16 @@ export const siteContent = {
       'Si tienes una campaña, una idea o una marca que necesita una ejecución visual más fuerte, conversemos por la vía más directa.',
     primaryCta: { label: 'Escríbenos por WhatsApp', href: 'https://wa.me/18498633817' },
   },
+
+  // Studio page (/studio). PLACEHOLDER media — swap reel/poster for the real
+  // ones when available (ambientSrc = muted loop bg; fullSrc = reel with audio).
+  studio: {
+    reel: {
+      eyebrow: 'Showreel 2026',
+      tagline: 'Sala de edición con mentalidad de estudio: convertimos marcas en imágenes que se sienten como cine.',
+      poster: portfolioImages[4],
+      ambientSrc: portfolioPlaceholderVideos[2],
+      fullSrc: portfolioPlaceholderVideos[2],
+    },
+  },
 }
