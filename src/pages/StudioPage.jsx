@@ -4,6 +4,7 @@ import StudioHero from '../components/studio/StudioHero'
 import StudioManifesto from '../components/studio/StudioManifesto'
 import StudioMarquee from '../components/studio/StudioMarquee'
 import StudioServices from '../components/studio/StudioServices'
+import StudioBehindScenes from '../components/studio/StudioBehindScenes'
 import './StudioPage.css'
 
 export default function StudioPage() {
@@ -18,6 +19,7 @@ export default function StudioPage() {
       <StudioManifesto />
       <StudioMarquee />
       <StudioServices />
+      <StudioBehindScenes />
     </div>
   )
 }

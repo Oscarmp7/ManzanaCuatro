@@ -261,5 +261,17 @@ export const siteContent = {
     },
     values: ['Crear', 'Mover', 'Acelerar'],
     valuesAccent: 'Mover',
+    // PLACEHOLDER behind-the-scenes photos — swap for real set shots.
+    behindScenes: [
+      { src: portfolioImages[0], alt: 'Rodaje en set' },
+      { src: portfolioImages[1], alt: 'Detrás de cámara' },
+      { src: portfolioImages[2], alt: 'Producción en locación' },
+      { src: portfolioImages[3], alt: 'Equipo de filmación' },
+      { src: portfolioImages[4], alt: 'Iluminación de set' },
+      { src: portfolioImages[1], alt: 'Dirección de arte' },
+      { src: portfolioImages[3], alt: 'Captura en exteriores' },
+      { src: portfolioImages[0], alt: 'Monitoreo de toma' },
+      { src: portfolioImages[2], alt: 'Colorización en estudio' },
+    ],
   },
 }
