@@ -48,18 +48,30 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
     const ro = new ResizeObserver(measure)
     ro.observe(target)
 
+    // Lerp the rendered position toward the pointer target so the lens glides
+    // (no per-event jumps), and drive BOTH the lens transform and the media
+    // slice offset from the same smoothed value so they stay aligned.
     let raf = 0
-    let mx = rect.width / 2
-    let my = rect.height / 2
-    const apply = () => {
-      raf = 0
-      root.style.setProperty('--mx', `${mx}px`)
-      root.style.setProperty('--my', `${my}px`)
+    let tx = rect.width / 2
+    let ty = rect.height / 2
+    let rx = tx
+    let ry = ty
+    let firstMove = true
+    const render = () => {
+      rx += (tx - rx) * 0.2
+      ry += (ty - ry) * 0.2
+      root.style.setProperty('--mx', `${rx}px`)
+      root.style.setProperty('--my', `${ry}px`)
+      raf = requestAnimationFrame(render)
     }
     const onMove = (e) => {
-      mx = e.clientX - rect.left
-      my = e.clientY - rect.top
-      if (!raf) raf = requestAnimationFrame(apply)
+      tx = e.clientX - rect.left
+      ty = e.clientY - rect.top
+      if (firstMove) {
+        rx = tx
+        ry = ty
+        firstMove = false
+      }
     }
     const onEnter = () => {
       const bg = bgVideoRef && bgVideoRef.current
@@ -73,7 +85,9 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
         const p = lens.play()
         if (p && p.catch) p.catch(() => {})
       }
+      firstMove = true
       target.classList.add('studio-hero--cursor-active')
+      if (!raf) raf = requestAnimationFrame(render)
       gsap.to(root, { autoAlpha: 1, duration: 0.3, ease: 'power3.out' })
       gsap.fromTo(
         root,
@@ -83,7 +97,17 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
     }
     const onLeave = () => {
       target.classList.remove('studio-hero--cursor-active')
-      gsap.to(root, { autoAlpha: 0, duration: 0.25, ease: 'power3.out' })
+      gsap.to(root, {
+        autoAlpha: 0,
+        duration: 0.25,
+        ease: 'power3.out',
+        onComplete: () => {
+          if (raf) {
+            cancelAnimationFrame(raf)
+            raf = 0
+          }
+        },
+      })
     }
 
     target.addEventListener('pointermove', onMove)
@@ -106,15 +130,8 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
     <div ref={rootRef} className="studio-reel-cursor" aria-hidden="true">
       <svg className="studio-reel-cursor__defs" width="0" height="0" aria-hidden="true" focusable="false">
         <filter id="studio-reel-ripple" x="-25%" y="-25%" width="150%" height="150%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.014 0.02" numOctaves="2" seed="7" result="noise">
-            <animate
-              attributeName="baseFrequency"
-              dur="16s"
-              values="0.014 0.02;0.02 0.013;0.014 0.02"
-              repeatCount="indefinite"
-            />
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.016 0.022" numOctaves="2" seed="7" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="24" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
 
