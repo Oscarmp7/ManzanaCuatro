@@ -5,43 +5,76 @@ import { siteContent } from '../../data/siteContent'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import './StudioBehindScenes.css'
 
-const COLS = 3
-// How far (in % of its own height) each column starts below before rising into
-// place — differential per column gives the masonry a sense of depth.
-const RISE = [32, 56, 42]
-
 export default function StudioBehindScenes() {
   const reduced = usePrefersReducedMotion()
   const rootRef = useRef(null)
-  const colRefs = useRef([])
+  const tileRefs = useRef([])
+  const subtitleRef = useRef(null)
 
   const { behindScenes } = siteContent.studio
-  const columns = Array.from({ length: COLS }, () => [])
-  behindScenes.forEach((img, i) => columns[i % COLS].push(img))
 
   useEffect(() => {
     if (reduced) return undefined
+
+    const tiles = tileRefs.current.filter(Boolean)
+    if (!tiles.length) return undefined
+
     const ctx = gsap.context(() => {
-      colRefs.current.forEach((col, i) => {
-        if (!col) return
+      // Every tile rises from below + fades in. The stagger runs from the centre
+      // of the wall outward so the composition reads as "centralizándose" —
+      // assembling toward the middle — rather than a flat one-speed slide.
+      gsap.fromTo(
+        tiles,
+        { yPercent: 22, y: 44, autoAlpha: 0 },
+        {
+          yPercent: 0,
+          y: 0,
+          autoAlpha: 1,
+          ease: 'power2.out',
+          stagger: { each: 0.04, from: 'center' },
+          scrollTrigger: {
+            trigger: rootRef.current,
+            // Begin as the section enters from the bottom and force the whole
+            // rise to COMPLETE exactly when the section is centred — then nothing
+            // is bound to scroll, so the grid settles centred and holds before
+            // the page scrolls on. ("se centralizan antes de seguir bajando")
+            start: 'top bottom',
+            end: 'center center',
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
+        },
+      )
+
+      // The serif line resolves in the tail of the same window, settled at centre.
+      if (subtitleRef.current) {
         gsap.fromTo(
-          col,
-          { yPercent: RISE[i] ?? 40, autoAlpha: 0.3 },
+          subtitleRef.current,
+          { autoAlpha: 0, y: 24 },
           {
-            yPercent: 0,
             autoAlpha: 1,
-            ease: 'none',
+            y: 0,
+            ease: 'power2.out',
             scrollTrigger: {
               trigger: rootRef.current,
-              start: 'top bottom',
-              end: 'center 62%',
-              scrub: true,
+              start: 'top 30%',
+              end: 'center center',
+              scrub: 0.6,
+              invalidateOnRefresh: true,
             },
           },
         )
-      })
+      }
     }, rootRef)
-    return () => ctx.revert()
+
+    // Lazy images can change tile heights after the triggers are measured;
+    // one refresh after first paint keeps the start/end math honest.
+    const refreshId = requestAnimationFrame(() => ScrollTrigger.refresh())
+
+    return () => {
+      cancelAnimationFrame(refreshId)
+      ctx.revert()
+    }
   }, [reduced])
 
   return (
@@ -52,22 +85,22 @@ export default function StudioBehindScenes() {
 
       <div className="studio-bts__inner">
         <div className="studio-bts__grid">
-          {columns.map((col, ci) => (
-            <div
-              className="studio-bts__col"
-              key={ci}
-              ref={(el) => (colRefs.current[ci] = el)}
+          {behindScenes.map((img, i) => (
+            <figure
+              className={`studio-bts__item studio-bts__item--${img.shape ?? 'square'}`}
+              key={`${i}-${img.alt}`}
+              ref={(el) => {
+                tileRefs.current[i] = el
+              }}
             >
-              {col.map((img, ii) => (
-                <figure className="studio-bts__item" key={`${ci}-${ii}`}>
-                  <img src={img.src} alt={img.alt} loading="lazy" decoding="async" />
-                </figure>
-              ))}
-            </div>
+              <img src={img.src} alt={img.alt} loading="lazy" decoding="async" />
+            </figure>
           ))}
         </div>
 
-        <p className="studio-bts__subtitle">Construyendo cultura, cuadro a cuadro.</p>
+        <p className="studio-bts__subtitle" ref={subtitleRef}>
+          Construyendo cultura, cuadro a cuadro.
+        </p>
       </div>
     </section>
   )

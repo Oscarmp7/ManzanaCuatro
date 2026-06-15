@@ -262,16 +262,29 @@ export const siteContent = {
     values: ['Crear', 'Mover', 'Acelerar'],
     valuesAccent: 'Mover',
     // PLACEHOLDER behind-the-scenes photos — swap for real set shots.
+    // Only 5 unique placeholder URLs exist (portfolioImages[0..4]); they are
+    // interleaved so the same image never lands adjacent, and each carries a
+    // `shape` that maps to a CSS aspect-ratio so the repetition reads as a
+    // curated wall rather than obvious dupes. Keep the {src, alt, shape} shape
+    // when real set photography is swapped in.
     behindScenes: [
-      { src: portfolioImages[0], alt: 'Rodaje en set' },
-      { src: portfolioImages[1], alt: 'Detrás de cámara' },
-      { src: portfolioImages[2], alt: 'Producción en locación' },
-      { src: portfolioImages[3], alt: 'Equipo de filmación' },
-      { src: portfolioImages[4], alt: 'Iluminación de set' },
-      { src: portfolioImages[1], alt: 'Dirección de arte' },
-      { src: portfolioImages[3], alt: 'Captura en exteriores' },
-      { src: portfolioImages[0], alt: 'Monitoreo de toma' },
-      { src: portfolioImages[2], alt: 'Colorización en estudio' },
+      { src: portfolioImages[0], alt: 'Rodaje en set', shape: 'portrait' },
+      { src: portfolioImages[2], alt: 'Detrás de cámara', shape: 'square' },
+      { src: portfolioImages[4], alt: 'Producción en locación', shape: 'landscape' },
+      { src: portfolioImages[1], alt: 'Equipo de filmación', shape: 'tall' },
+      { src: portfolioImages[3], alt: 'Iluminación de set', shape: 'square' },
+      { src: portfolioImages[0], alt: 'Dirección de arte', shape: 'wide' },
+      { src: portfolioImages[2], alt: 'Captura en exteriores', shape: 'portrait' },
+      { src: portfolioImages[4], alt: 'Monitoreo de toma', shape: 'square' },
+      { src: portfolioImages[1], alt: 'Colorización en estudio', shape: 'landscape' },
+      { src: portfolioImages[3], alt: 'Montaje de cámara', shape: 'square' },
+      { src: portfolioImages[0], alt: 'Set de iluminación nocturna', shape: 'tall' },
+      { src: portfolioImages[2], alt: 'Revisión de encuadre', shape: 'wide' },
+      { src: portfolioImages[4], alt: 'Dirección en rodaje', shape: 'portrait' },
+      { src: portfolioImages[1], alt: 'Backstage de producción', shape: 'square' },
+      { src: portfolioImages[3], alt: 'Detalle de arte de set', shape: 'landscape' },
+      { src: portfolioImages[0], alt: 'Composición de plano', shape: 'square' },
+      { src: portfolioImages[2], alt: 'Cierre de jornada de rodaje', shape: 'tall' },
     ],
     // PLACEHOLDER testimonials — swap for real quotes/photos/brands.
     testimonials: [

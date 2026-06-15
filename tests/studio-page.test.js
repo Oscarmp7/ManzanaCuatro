@@ -94,12 +94,18 @@ test('studio services carousel: cards + capabilities, arrows, drag, snap, stagge
 
 // ----------------------------------------------------------------- Block 5
 
-test('studio behind-the-scenes: bg title + per-column parallax masonry, lazy', () => {
+test('studio behind-the-scenes: bg title + dense rise-then-settle masonry, lazy', () => {
   const bts = read('../src/components/studio/StudioBehindScenes.jsx')
   assert.match(bts, /studio-bts__bg-title/)
-  assert.match(bts, /colRefs/)
-  assert.match(bts, /scrub: true/)
+  // per-tile refs collected (no global selectors)
+  assert.match(bts, /tileRefs/)
+  // staggered rise that converges + settles exactly when the section is centred
+  assert.match(bts, /stagger:/)
+  assert.match(bts, /end: 'center center'/)
   assert.match(bts, /loading="lazy"/)
+  // dense masonry via CSS multi-column
+  const css = read('../src/components/studio/StudioBehindScenes.css')
+  assert.match(css, /column-count/)
   const data = read('../src/data/siteContent.js')
   assert.match(data, /behindScenes:/)
   assert.match(read('../src/pages/StudioPage.jsx'), /StudioBehindScenes/)

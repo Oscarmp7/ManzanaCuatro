@@ -7,7 +7,8 @@
   padding: clamp(4rem, 10vw, 8rem) 0;
 }
 
-/* Huge title sitting behind the gallery */
+/* Huge faint display title sitting behind the gallery — the grid rises from
+   beneath it before settling. */
 .studio-bts__bg-title {
   position: absolute;
   top: clamp(2rem, 6vw, 5rem);
@@ -22,6 +23,7 @@
   letter-spacing: 0.01em;
   color: color-mix(in srgb, var(--text) 9%, var(--bg));
   pointer-events: none;
+  user-select: none;
 }
 
 .studio-bts__inner {
@@ -32,49 +34,41 @@
   padding: clamp(4rem, 9vw, 8rem) var(--layout-pad) 0;
 }
 
+/* Dense masonry via CSS multi-column: gap-free across varied tile heights, and
+   a flat tile list keeps the per-tile refs (and the rise stagger) trivial. */
 .studio-bts__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  align-items: start;
-}
-
-.studio-bts__col {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  will-change: transform;
-}
-
-/* Offset middle column for a masonry rhythm */
-.studio-bts__col:nth-child(2) {
-  margin-top: clamp(2rem, 6vw, 5rem);
+  column-count: 5;
+  column-gap: clamp(0.5rem, 1.4vw, 1rem);
 }
 
 .studio-bts__item {
+  break-inside: avoid;
+  margin: 0 0 clamp(0.5rem, 1.4vw, 1rem);
   overflow: hidden;
   border-radius: 4px;
   background: var(--bg-elevated);
+  /* GSAP drives autoAlpha (visibility + opacity); start hidden so there is no
+     flash of the un-animated grid before the context mounts. The reduced-motion
+     block below force-shows it. */
+  visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .studio-bts__item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   display: block;
+  object-fit: cover;
   filter: saturate(0.92) contrast(1.02);
 }
 
-/* Varied aspect ratios → masonry feel */
-.studio-bts__item:nth-child(3n + 1) img {
-  aspect-ratio: 3 / 4;
-}
-.studio-bts__item:nth-child(3n + 2) img {
-  aspect-ratio: 1 / 1;
-}
-.studio-bts__item:nth-child(3n) img {
-  aspect-ratio: 4 / 5;
-}
+/* Varied aspect ratios (data-driven via the `shape` field) break up the 5
+   repeated placeholder images so the wall reads as curated, not duplicated. */
+.studio-bts__item--portrait img { aspect-ratio: 3 / 4; }
+.studio-bts__item--square img { aspect-ratio: 1 / 1; }
+.studio-bts__item--landscape img { aspect-ratio: 4 / 5; }
+.studio-bts__item--tall img { aspect-ratio: 3 / 5; }
+.studio-bts__item--wide img { aspect-ratio: 5 / 4; }
 
 .studio-bts__subtitle {
   margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
@@ -83,13 +77,35 @@
   font-style: italic;
   font-size: clamp(1.1rem, 2.2vw, 1.7rem);
   color: var(--text-muted);
+  visibility: hidden;
+  will-change: transform, opacity;
 }
 
+/* ---- Tablet: 3 columns ---- */
+@media (max-width: 1024px) {
+  .studio-bts__grid {
+    column-count: 3;
+  }
+}
+
+/* ---- Mobile: 2 columns ---- */
 @media (max-width: 700px) {
   .studio-bts__grid {
-    grid-template-columns: repeat(2, 1fr);
+    column-count: 2;
+    column-gap: 0.5rem;
   }
-  .studio-bts__col:nth-child(3) {
-    display: none;
+  .studio-bts__item {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ---- Reduced motion: render the wall fully assembled & visible, no scroll FX ---- */
+@media (prefers-reduced-motion: reduce) {
+  .studio-bts__item,
+  .studio-bts__subtitle {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    will-change: auto;
   }
 }
