@@ -264,7 +264,6 @@ export const siteContent = {
   // ones when available (ambientSrc = muted loop bg; fullSrc = reel with audio).
   studio: {
     reel: {
-      eyebrow: 'Showreel 2026',
       tagline: 'Sala de edición con mentalidad de estudio: convertimos marcas en imágenes que se sienten como cine.',
       poster: portfolioImages[4],
       ambientSrc: portfolioPlaceholderVideos[2],

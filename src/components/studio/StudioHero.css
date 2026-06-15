@@ -1,12 +1,14 @@
-/* Studio hero — cinematic dark stage over our own reel loop */
+/* Studio hero — full-bleed cinematic reel stage with the brand wordmark centered */
 .studio-hero {
   position: relative;
   width: 100%;
-  min-height: 72vh;
-  min-height: 72dvh;
+  min-height: 100vh;
+  min-height: 100svh;
   overflow: hidden;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   /* Always a dark stage regardless of theme (text sits over video) */
   background: var(--stage-bg);
   color: var(--stage-text);
@@ -28,12 +30,23 @@
 .studio-hero__bg-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.82) 0%,
-    rgba(0, 0, 0, 0.35) 45%,
-    rgba(0, 0, 0, 0.5) 100%
-  );
+  background: radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0, 0, 0, 0.45) 100%
+    ),
+    linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+/* Fade the bottom of the reel into the next section's background so the hero
+   "ties into" the content below (seamless in dark; a soft vignette in light). */
+.studio-hero__blend {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(7rem, 18vh, 14rem);
+  background: linear-gradient(to bottom, transparent, var(--bg) 96%);
 }
 
 /* Full-area trigger that opens the reel modal */
@@ -49,10 +62,16 @@
 
 .studio-hero__trigger:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: -6px;
+  outline-offset: -8px;
 }
 
-/* Visual content sits above the trigger but lets clicks pass through */
+/* The custom cursor hides the native one while hovering the reel */
+.studio-hero--cursor-active,
+.studio-hero--cursor-active .studio-hero__trigger {
+  cursor: none;
+}
+
+/* Centered content; clicks pass through to the trigger */
 .studio-hero__content {
   position: relative;
   z-index: 3;
@@ -60,17 +79,7 @@
   width: 100%;
   max-width: var(--layout-max);
   margin: 0 auto;
-  padding: 0 var(--layout-pad) clamp(3rem, 8vw, 6rem);
-}
-
-.studio-hero__eyebrow {
-  display: block;
-  font-family: var(--font-hud);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--stage-text) 78%, transparent);
-  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+  padding: 0 var(--layout-pad);
 }
 
 .studio-hero__title {
@@ -82,23 +91,23 @@
 .studio-hero__title-inner {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 13vw, 12rem);
+  font-size: clamp(4rem, 16vw, 15rem);
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: var(--stage-text);
 }
 
 .studio-hero__tagline {
-  max-width: 30ch;
-  margin-top: clamp(1rem, 2.5vw, 1.75rem);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(1.15rem, 2.4vw, 1.9rem);
-  line-height: 1.25;
-  color: color-mix(in srgb, var(--stage-text) 90%, transparent);
+  max-width: 46ch;
+  margin: clamp(1rem, 2.5vw, 1.75rem) auto 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--stage-text) 82%, transparent);
 }
 
-.studio-hero__cta {
+/* Touch / keyboard affordance — hidden where a hovering cursor exists */
+.studio-hero__cue {
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
@@ -108,9 +117,10 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--stage-text);
+  opacity: 0.85;
 }
 
-.studio-hero__play {
+.studio-hero__cue-dot {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -118,25 +128,28 @@
   height: 2.5rem;
   border: 1px solid color-mix(in srgb, var(--stage-text) 55%, transparent);
   border-radius: 50%;
-  transition: background-color 0.25s var(--ease-out);
 }
 
-.studio-hero__play svg {
+.studio-hero__cue-dot svg {
   width: 1rem;
   height: 1rem;
   margin-left: 2px;
 }
 
-/* The trigger is the hover target; lift the play cue when the hero is hovered */
-.studio-hero__trigger:hover ~ .studio-hero__content .studio-hero__play,
-.studio-hero__trigger:focus-visible ~ .studio-hero__content .studio-hero__play {
-  background: color-mix(in srgb, var(--accent) 85%, transparent);
-  border-color: transparent;
+/* On hovering, fine-pointer devices the custom lens cursor replaces the cue */
+@media (hover: hover) and (pointer: fine) {
+  .studio-hero__cue {
+    display: none;
+  }
+  /* but resurface it when the trigger is keyboard-focused */
+  .studio-hero__trigger:focus-visible ~ .studio-hero__content .studio-hero__cue {
+    display: inline-flex;
+  }
 }
 
 @media (max-width: 600px) {
   .studio-hero {
-    min-height: 62vh;
-    min-height: 62dvh;
+    min-height: 88vh;
+    min-height: 88svh;
   }
 }
