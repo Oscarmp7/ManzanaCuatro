@@ -70,6 +70,8 @@
   text-align: center;
   gap: 0.6rem;
   min-height: var(--brand-card-step);
+  /* Subtle settle to the exact hero scale at the handoff (driven by GSAP). */
+  transform: scale(var(--loader-title-settle, 1));
 }
 
 .loader__meta {
@@ -78,6 +80,15 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--stage-text) 78%, transparent);
+  /* Hidden during the load (only the wordmark shows); reserves its space so
+     the wordmark keeps the home metrics. The subtitle reveals on the home. */
+  visibility: hidden;
+}
+
+/* Empty placeholder matching the home CTA's height (.home-reel__view min 44px),
+   so the wordmark sits at the exact same vertical position without any CTA. */
+.loader__view-space {
+  min-height: 44px;
 }
 
 .loader__wordmark {

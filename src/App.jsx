@@ -27,6 +27,9 @@ const sessionAlreadyLoaded = () => {
 
 export default function App() {
   const [loaded, setLoaded] = useState(sessionAlreadyLoaded)
+  // True only when the full loader plays this mount → the home reveals its
+  // brand subtitle + CTA as the loader hands off.
+  const [firstLoad] = useState(() => !sessionAlreadyLoaded())
   const { theme, toggle } = useTheme()
   const { curtain, play } = useThemeTransition(toggle)
 
@@ -49,7 +52,7 @@ export default function App() {
           <Suspense fallback={<div className="route-fallback" aria-hidden="true" />}>
             <Routes>
               <Route element={<MainLayout />}>
-                <Route index element={<HomePage ready={loaded} />} />
+                <Route index element={<HomePage ready={loaded} firstLoad={firstLoad} />} />
                 <Route path="proyectos" element={<ProjectsPage />} />
                 <Route path="proyectos/:slug" element={<ProjectDetailPage />} />
                 <Route path="studio" element={<StudioPage />} />

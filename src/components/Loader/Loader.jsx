@@ -30,9 +30,13 @@ const formatTimecode = (frames) => {
 function TitleCard() {
   return (
     <div className="loader__title-card">
+      {/* Meta is rendered but hidden during the load (reserves its space so the
+          wordmark stays at the exact home metrics); it reveals on the home. */}
       <p className="loader__meta">{siteContent.hero.eyebrow}</p>
       <p className="loader__wordmark">{siteContent.brand.name}</p>
-      {/* No CTA during the load — it reveals only in the hero, once loaded. */}
+      {/* Empty CTA-height spacer: no CTA text during the load, but the wordmark
+          keeps the home brand-card metrics so the handoff never jumps. */}
+      <span className="loader__view-space" aria-hidden="true" />
     </div>
   )
 }
@@ -75,6 +79,7 @@ export default function Loader({ onComplete }) {
     const TIMEOUT_MS = 3500 // safety: enter the hero no matter what
 
     const grade = { x: GRADE_X_FROM }
+    const root = loaderRef.current
     const hud = hudRef.current
     const backdrop = backdropRef.current
     let exited = false
@@ -115,7 +120,9 @@ export default function Loader({ onComplete }) {
     if (posterSrc) poster.src = posterSrc
     else markAsset()
 
-    // HUD entrance (one-shot)
+    // HUD entrance (one-shot). The title sits a hair larger in the "log" state
+    // and settles to the exact hero scale at the handoff (see finish()).
+    gsap.set(root, { '--loader-title-settle': 1.04 })
     gsap.set(hud, { autoAlpha: 0, y: 6 })
     gsap.to(hud, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power1.out', delay: 0.05 })
 
@@ -135,8 +142,10 @@ export default function Loader({ onComplete }) {
       // handoff is robust even if rAF is throttled (e.g. a backgrounded tab).
       onComplete?.()
 
-      // Cinematic exit: cut the HUD apparatus, then open the void backdrop onto
-      // the home (whose identical brand title-card sits underneath).
+      // Cinematic exit: the title settles to its exact hero scale, the HUD
+      // apparatus cuts away, then the void backdrop opens onto the home (whose
+      // identical brand title-card sits underneath at scale 1).
+      gsap.to(root, { '--loader-title-settle': 1, duration: 0.6, ease: 'expo.out' })
       gsap.to(hud, { autoAlpha: 0, y: -6, duration: 0.35, ease: 'power1.in' })
       gsap.to(backdrop, {
         autoAlpha: 0,
@@ -180,7 +189,7 @@ export default function Loader({ onComplete }) {
       clearTimeout(unmountFallback)
       poster.onload = null
       poster.onerror = null
-      gsap.killTweensOf([hud, backdrop])
+      gsap.killTweensOf([hud, backdrop, root])
     }
   }, [onComplete, reducedMotion])
 

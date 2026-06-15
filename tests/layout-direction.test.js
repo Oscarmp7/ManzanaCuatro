@@ -48,7 +48,7 @@ test('loader plays the grade reveal: log scene, mask wipe, colorist HUD and stag
   assert.match(loaderSource, /--grade-x/)
   assert.match(loaderCss, /mask-image/)
   assert.match(loaderCss, /var\(--grade-x\)/)
-  assert.doesNotMatch(loaderCss, /\.loader__view/) // CTA removed from the loader
+  assert.doesNotMatch(loaderCss, /\.loader__view\s*\{/) // CTA button removed (a sizing spacer may remain)
   assert.match(loaderCss, /\.loader__grade-bar/)
 
   // Theme-safe: the stage never reads themable text/background tokens

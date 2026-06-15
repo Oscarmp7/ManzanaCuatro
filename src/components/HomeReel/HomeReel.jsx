@@ -65,7 +65,7 @@ function ReelMedia({ project, index, reducedMotion, shouldPlayVideo = true }) {
 // Component
 // ---------------------------------------------------------------------------
 
-export default function HomeReel({ ready = true }) {
+export default function HomeReel({ ready = true, firstLoad = false }) {
   const sectionRef = useRef(null)
   const frameRefs = useRef([])
   const titleRefs = useRef([])
@@ -82,6 +82,7 @@ export default function HomeReel({ ready = true }) {
   const [activeReelIndex, setActiveReelIndex] = useState(0)
   const [colorStageActive, setColorStageActive] = useState(false)
   const scrollHintRef = useRef(null)
+  const brandRevealedRef = useRef(false)
   const reducedMotion = usePrefersReducedMotion()
   const safeActiveReelIndex = ready && !reducedMotion ? activeReelIndex : 0
   const safeColorStageActive = ready && !reducedMotion ? colorStageActive : false
@@ -109,6 +110,34 @@ export default function HomeReel({ ready = true }) {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [ready, reducedMotion])
+
+  // First-load handoff: as the loader settles its wordmark and opens the scene,
+  // the brand card's subtitle + CTA reveal beneath the (continuous) wordmark.
+  // Animates the children's own opacity/transform only — never the title-card
+  // CSS vars the pinned ScrollTrigger drives, so the pin stays untouched.
+  useEffect(() => {
+    if (!ready || !firstLoad || reducedMotion || brandRevealedRef.current) return undefined
+    const brandCard = titleRefs.current[0]
+    if (!brandCard) return undefined
+    const targets = [
+      brandCard.querySelector('.home-reel__meta'),
+      brandCard.querySelector('.home-reel__view'),
+    ].filter(Boolean)
+    if (!targets.length) return undefined
+
+    brandRevealedRef.current = true
+    const ctx = gsap.context(() => {
+      gsap.from(targets, {
+        autoAlpha: 0,
+        y: 14,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: 'expo.out',
+        delay: 0.5,
+      })
+    })
+    return () => ctx.revert()
+  }, [ready, firstLoad, reducedMotion])
 
   useHomeReelScroll({
     ready,
