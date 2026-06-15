@@ -64,11 +64,12 @@ test('studio manifesto: two-column reveal + stats count-up, refs & reduced-motio
 
 // ----------------------------------------------------------------- Block 3
 
-test('studio marquee: scroll-velocity ticker, accent word + circular separator', () => {
+test('studio marquee: infinite velocity-reactive tween, accent word + circular separator', () => {
   const mq = read('../src/components/studio/StudioMarquee.jsx')
-  assert.match(mq, /ScrollTrigger\.getVelocity/)
-  assert.match(mq, /gsap\.ticker\.add/)
-  assert.match(mq, /gsap\.utils\.wrap/)
+  assert.match(mq, /repeat:\s*-1/) // infinite loop tween (robust under StrictMode)
+  assert.match(mq, /getVelocity/) // scroll velocity reacts
+  assert.match(mq, /timeScale/) // velocity modulates speed
+  assert.match(mq, /gsap\.utils\.wrap/) // seamless wrap
   assert.match(mq, /studio-marquee__word--accent/)
   assert.match(mq, /studio-marquee__sep/)
   const css = read('../src/components/studio/StudioMarquee.css')
@@ -113,12 +114,13 @@ test('studio behind-the-scenes: bg title + dense rise-then-settle masonry, lazy'
 
 // ----------------------------------------------------------------- Blocks 6-8
 
-test('studio clients: sticky header + grayscale→color logo grid', () => {
+test('studio clients: centered head + count-agnostic grayscale logo wall', () => {
   const cl = read('../src/components/studio/StudioClients.jsx')
   assert.match(cl, /studio-clients__grid/)
   const css = read('../src/components/studio/StudioClients.css')
-  assert.match(css, /position: sticky/)
-  assert.match(css, /grayscale/)
+  assert.match(css, /flex-wrap/) // wall fills any row count cleanly
+  assert.match(css, /text-align: center/) // centered heading on top
+  assert.match(css, /grayscale/) // image logos desaturated by default
   assert.match(read('../src/pages/StudioPage.jsx'), /StudioClients/)
 })
 
@@ -133,11 +135,13 @@ test('studio testimonials: pausable autoplay + segmented progress + arrows', () 
   assert.match(read('../src/pages/StudioPage.jsx'), /StudioTestimonials/)
 })
 
-test('studio closing: CTA + blue glow + oversized wordmark', () => {
+test('studio closing: solid wordmark grade-reveal + slate HUD (no gradient text)', () => {
   const c = read('../src/components/studio/StudioClosing.jsx')
   assert.match(c, /studio-closing__wordmark/)
+  assert.match(c, /studio-closing__hud/) // cinematic slate
   const css = read('../src/components/studio/StudioClosing.css')
-  assert.match(css, /studio-closing__glow/)
-  assert.match(css, /radial-gradient/)
+  assert.match(css, /--fill/) // grade-reveal wipe variable
+  assert.match(css, /clip-path/) // mask wipe, not a colour gradient
+  assert.doesNotMatch(css, /background-clip:\s*text/) // doctrine: no gradient text
   assert.match(read('../src/pages/StudioPage.jsx'), /StudioClosing/)
 })
