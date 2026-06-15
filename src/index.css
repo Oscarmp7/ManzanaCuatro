@@ -60,7 +60,7 @@
   --font-hud: 'Space Mono', 'Courier New', monospace;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --layout-max: 1320px;
+  --layout-max: 1680px;
   --layout-pad: clamp(18px, 4vw, 48px);
   --nav-height: 96px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);

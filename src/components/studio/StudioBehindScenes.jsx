@@ -6,7 +6,9 @@ import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import './StudioBehindScenes.css'
 
 const COLS = 3
-const SHIFT = [9, -13, 7] // differential parallax per column
+// How far (in % of its own height) each column starts below before rising into
+// place — differential per column gives the masonry a sense of depth.
+const RISE = [32, 56, 42]
 
 export default function StudioBehindScenes() {
   const reduced = usePrefersReducedMotion()
@@ -22,17 +24,17 @@ export default function StudioBehindScenes() {
     const ctx = gsap.context(() => {
       colRefs.current.forEach((col, i) => {
         if (!col) return
-        const d = SHIFT[i] ?? 0
         gsap.fromTo(
           col,
-          { yPercent: -d * 0.5 },
+          { yPercent: RISE[i] ?? 40, autoAlpha: 0.3 },
           {
-            yPercent: d * 0.5,
+            yPercent: 0,
+            autoAlpha: 1,
             ease: 'none',
             scrollTrigger: {
               trigger: rootRef.current,
               start: 'top bottom',
-              end: 'bottom top',
+              end: 'center 62%',
               scrub: true,
             },
           },
