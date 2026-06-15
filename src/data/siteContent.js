@@ -273,5 +273,32 @@ export const siteContent = {
       { src: portfolioImages[0], alt: 'Monitoreo de toma' },
       { src: portfolioImages[2], alt: 'Colorización en estudio' },
     ],
+    // PLACEHOLDER testimonials — swap for real quotes/photos/brands.
+    testimonials: [
+      {
+        quote:
+          'Trabajar con Manzana Cuatro fue tener un socio que entiende la marca y la eleva: ejecución impecable y una calma creativa que se nota en el resultado.',
+        name: 'Nombre Apellido',
+        role: 'Marketing Lead',
+        brand: 'La Bodega',
+        photo: portfolioImages[0],
+      },
+      {
+        quote:
+          'Rápidos, precisos y con un estándar visual altísimo. Cada entrega se sintió pensada para nuestra audiencia y para la conversación cultural del momento.',
+        name: 'Nombre Apellido',
+        role: 'Brand Manager',
+        brand: 'Shibuya',
+        photo: portfolioImages[1],
+      },
+      {
+        quote:
+          'La colorización y el acabado llevaron la campaña a otro nivel. Profesionales de principio a fin; volveríamos a producir con ellos sin dudarlo.',
+        name: 'Nombre Apellido',
+        role: 'Head of Content',
+        brand: 'Changan',
+        photo: portfolioImages[2],
+      },
+    ],
   },
 }

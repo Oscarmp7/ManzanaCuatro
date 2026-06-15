@@ -5,6 +5,9 @@ import StudioManifesto from '../components/studio/StudioManifesto'
 import StudioMarquee from '../components/studio/StudioMarquee'
 import StudioServices from '../components/studio/StudioServices'
 import StudioBehindScenes from '../components/studio/StudioBehindScenes'
+import StudioClients from '../components/studio/StudioClients'
+import StudioTestimonials from '../components/studio/StudioTestimonials'
+import StudioClosing from '../components/studio/StudioClosing'
 import './StudioPage.css'
 
 export default function StudioPage() {
@@ -20,6 +23,9 @@ export default function StudioPage() {
       <StudioMarquee />
       <StudioServices />
       <StudioBehindScenes />
+      <StudioClients />
+      <StudioTestimonials />
+      <StudioClosing />
     </div>
   )
 }

@@ -1,0 +1,173 @@
+.studio-testi {
+  width: 100%;
+  background: var(--bg-elevated);
+  color: var(--text);
+  padding: clamp(4rem, 9vw, 7rem) 0;
+}
+
+.studio-testi__inner {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 var(--layout-pad);
+}
+
+/* Segmented progress */
+.studio-testi__progress {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
+}
+
+.studio-testi__seg {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: color-mix(in srgb, var(--text) 18%, transparent);
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.studio-testi__seg-fill {
+  position: absolute;
+  inset: 0;
+  width: 0;
+  background: var(--accent);
+}
+
+.studio-testi__seg-fill.is-done {
+  width: 100%;
+}
+
+.studio-testi__seg-fill.is-active {
+  animation: studio-testi-fill 6s linear forwards;
+}
+
+.studio-testi__seg-fill.is-active.is-paused {
+  animation-play-state: paused;
+}
+
+.studio-testi__seg-fill.is-active.is-static {
+  animation: none;
+  width: 100%;
+}
+
+@keyframes studio-testi-fill {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Slides (crossfade) */
+.studio-testi__stage {
+  position: relative;
+  min-height: clamp(18rem, 30vw, 22rem);
+}
+
+.studio-testi__slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: clamp(7rem, 16vw, 12rem) 1fr;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.5s var(--ease-out),
+    visibility 0.5s;
+}
+
+.studio-testi__slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.studio-testi__photo {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.studio-testi__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.studio-testi__quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text);
+  margin-bottom: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+.studio-testi__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.studio-testi__role {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--font-hud);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Nav */
+.studio-testi__nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.studio-testi__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--separator) 70%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+
+.studio-testi__arrow svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.studio-testi__arrow:hover,
+.studio-testi__arrow:focus-visible {
+  background: var(--accent);
+  border-color: transparent;
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .studio-testi__slide {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .studio-testi__photo {
+    max-width: 8rem;
+  }
+}

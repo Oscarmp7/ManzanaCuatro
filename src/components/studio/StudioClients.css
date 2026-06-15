@@ -1,0 +1,99 @@
+.studio-clients {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  padding: clamp(4rem, 9vw, 7rem) 0;
+}
+
+.studio-clients__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 2fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  padding: 0 var(--layout-pad);
+}
+
+/* Sticky header while the grid scrolls past */
+.studio-clients__head {
+  position: sticky;
+  top: calc(var(--nav-height) + 2rem);
+  align-self: start;
+}
+
+.studio-clients__eyebrow {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.9rem;
+}
+
+.studio-clients__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+/* Logo grid with divider lines */
+.studio-clients__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+}
+
+.studio-clients__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(7rem, 14vw, 10rem);
+  padding: 1.5rem;
+  border-right: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--separator) 60%, transparent);
+}
+
+/* Text "logos": muted (grayscale) → accent on hover */
+.studio-clients__logo {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.4vw, 2.1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: color-mix(in srgb, var(--text) 38%, var(--bg));
+  transition: color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.studio-clients__cell:hover .studio-clients__logo {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Image logos: grayscale → color on hover */
+.studio-clients__logo-img {
+  max-width: 100%;
+  max-height: 3rem;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.55;
+  transition: filter 0.25s var(--ease-out), opacity 0.25s var(--ease-out);
+}
+
+.studio-clients__cell:hover .studio-clients__logo-img {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .studio-clients__inner {
+    grid-template-columns: 1fr;
+  }
+  .studio-clients__head {
+    position: static;
+  }
+}

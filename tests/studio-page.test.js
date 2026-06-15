@@ -104,3 +104,34 @@ test('studio behind-the-scenes: bg title + per-column parallax masonry, lazy', (
   assert.match(data, /behindScenes:/)
   assert.match(read('../src/pages/StudioPage.jsx'), /StudioBehindScenes/)
 })
+
+// ----------------------------------------------------------------- Blocks 6-8
+
+test('studio clients: sticky header + grayscale→color logo grid', () => {
+  const cl = read('../src/components/studio/StudioClients.jsx')
+  assert.match(cl, /studio-clients__grid/)
+  const css = read('../src/components/studio/StudioClients.css')
+  assert.match(css, /position: sticky/)
+  assert.match(css, /grayscale/)
+  assert.match(read('../src/pages/StudioPage.jsx'), /StudioClients/)
+})
+
+test('studio testimonials: pausable autoplay + segmented progress + arrows', () => {
+  const t = read('../src/components/studio/StudioTestimonials.jsx')
+  assert.match(t, /setInterval/)
+  assert.match(t, /setPaused/)
+  assert.match(t, /studio-testi__seg/)
+  const css = read('../src/components/studio/StudioTestimonials.css')
+  assert.match(css, /studio-testi-fill/)
+  assert.match(read('../src/data/siteContent.js'), /testimonials:/)
+  assert.match(read('../src/pages/StudioPage.jsx'), /StudioTestimonials/)
+})
+
+test('studio closing: CTA + blue glow + oversized wordmark', () => {
+  const c = read('../src/components/studio/StudioClosing.jsx')
+  assert.match(c, /studio-closing__wordmark/)
+  const css = read('../src/components/studio/StudioClosing.css')
+  assert.match(css, /studio-closing__glow/)
+  assert.match(css, /radial-gradient/)
+  assert.match(read('../src/pages/StudioPage.jsx'), /StudioClosing/)
+})
