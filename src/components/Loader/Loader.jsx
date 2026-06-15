@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { siteContent } from '../../data/siteContent'
+import { showcaseProjects, siteContent } from '../../data/siteContent'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import './Loader.css'
 
@@ -15,7 +15,6 @@ import './Loader.css'
 // ---------------------------------------------------------------------------
 
 const FPS = 24
-const CLOCK_SECONDS = 3
 const GRADE_X_FROM = -12 // mask feather spans +12%, so start fully covered
 const GRADE_X_TO = 112 // and end fully revealed
 const GRADE_X_SPAN = GRADE_X_TO - GRADE_X_FROM
@@ -70,65 +69,119 @@ export default function Loader({ onComplete }) {
       return () => fade.kill()
     }
 
-    const grade = { x: GRADE_X_FROM }
-    const clock = { frames: 0 }
+    // Grade driven by REAL asset loading (fonts + the home's first reel poster)
+    // blended with a comfortable minimum so the wipe never feels cut short.
+    const MIN_MS = 1500 // grade never completes faster than this
+    const TIMEOUT_MS = 3500 // safety: enter the hero no matter what
 
-    const renderTimecode = () => {
-      if (timecodeRef.current) {
-        timecodeRef.current.textContent = formatTimecode(clock.frames)
-      }
-    }
+    const grade = { x: GRADE_X_FROM }
+    const hud = hudRef.current
+    const backdrop = backdropRef.current
+    let exited = false
+    let forced = false
+    let safety
+    let unmountFallback
 
     const applyGrade = () => {
       logRef.current?.style.setProperty('--grade-x', `${grade.x.toFixed(2)}%`)
-
       const pct = Math.round(
         Math.min(100, Math.max(0, ((grade.x - GRADE_X_FROM) / GRADE_X_SPAN) * 100)),
       )
+      if (gradeFillRef.current) gradeFillRef.current.style.width = `${pct}%`
+      if (gradePctRef.current) gradePctRef.current.textContent = `${pct}%`
+    }
 
-      if (gradeFillRef.current) {
-        gradeFillRef.current.style.width = `${pct}%`
-      }
-
-      if (gradePctRef.current) {
-        gradePctRef.current.textContent = `${pct}%`
+    const renderTimecode = (elapsedMs) => {
+      if (timecodeRef.current) {
+        timecodeRef.current.textContent = formatTimecode(Math.floor((elapsedMs / 1000) * FPS))
       }
     }
 
-    // Beat sheet (art direction): hold the raw log state, grade it slowly,
-    // hold the graded result with the bar in Calibration Blue, then open the
-    // void. Only the backdrop fades — the card never crossfades, because its
-    // home twin sits at the exact same metrics underneath.
-    const tl = gsap.timeline({
-      onComplete: () => setVisible(false),
-    })
+    // Real load signals: web fonts + the home's first reel poster.
+    const ASSET_TOTAL = 2
+    let assetsLoaded = 0
+    const markAsset = () => { assetsLoaded += 1 }
 
-    tl.set(hudRef.current, { autoAlpha: 0, y: 6 })
-      .to(clock, {
-        frames: FPS * CLOCK_SECONDS,
-        duration: CLOCK_SECONDS,
-        ease: 'none',
-        onUpdate: renderTimecode,
-      }, 0)
-      .to(hudRef.current, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power1.out' }, 0.05)
-      // 0.40–0.55: hold — read the raw log state
-      .to(grade, {
-        x: GRADE_X_TO,
-        duration: 1.4,
-        ease: 'power2.inOut',
-        onUpdate: applyGrade,
-      }, 0.55)
-      // Grade complete: the bar ticks to Calibration Blue and holds.
-      .add(() => gradeRef.current?.classList.add('loader__grade--done'), 1.95)
-      // Solidify the home behind the loader (app-shell fades in over 1.05s,
-      // fully opaque at ~3.4s — before the backdrop starts opening).
-      .call(() => onComplete?.(), [], 2.35)
-      .to(hudRef.current, { autoAlpha: 0, y: -6, duration: 0.35, ease: 'power1.in' }, 2.65)
-      // Reveal: fade ONLY the void backdrop. The graded card stays solid over
-      // its identical home twin, so unmounting is invisible.
-      .to(backdropRef.current, { autoAlpha: 0, duration: 0.95, ease: 'expo.out' }, 3.2)
+    if (typeof document !== 'undefined' && document.fonts?.ready) {
+      document.fonts.ready.then(markAsset, markAsset)
+    } else {
+      markAsset()
+    }
 
-    return () => tl.kill()
+    const poster = new Image()
+    poster.onload = markAsset
+    poster.onerror = markAsset
+    const posterSrc = showcaseProjects[0]?.poster
+    if (posterSrc) poster.src = posterSrc
+    else markAsset()
+
+    // HUD entrance (one-shot)
+    gsap.set(hud, { autoAlpha: 0, y: 6 })
+    gsap.to(hud, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power1.out', delay: 0.05 })
+
+    const start = performance.now()
+
+    function finish() {
+      if (exited) return
+      exited = true
+      gsap.ticker.remove(tick)
+      clearTimeout(safety)
+
+      grade.x = GRADE_X_TO
+      applyGrade()
+      gradeRef.current?.classList.add('loader__grade--done')
+
+      // Compose the hero underneath FIRST (directly, not via a tween) so the
+      // handoff is robust even if rAF is throttled (e.g. a backgrounded tab).
+      onComplete?.()
+
+      // Cinematic exit: cut the HUD apparatus, then open the void backdrop onto
+      // the home (whose identical brand title-card sits underneath).
+      gsap.to(hud, { autoAlpha: 0, y: -6, duration: 0.35, ease: 'power1.in' })
+      gsap.to(backdrop, {
+        autoAlpha: 0,
+        duration: 0.95,
+        delay: 0.25,
+        ease: 'expo.out',
+        onComplete: () => setVisible(false),
+      })
+      // Hard fallback: always unmount even if the fade never ticks.
+      unmountFallback = setTimeout(() => setVisible(false), 1600)
+    }
+
+    function tick() {
+      const elapsed = performance.now() - start
+      renderTimecode(elapsed)
+
+      const timeCeiling = Math.min(1, elapsed / MIN_MS)
+      const realFraction = forced ? 1 : Math.min(1, assetsLoaded / ASSET_TOTAL)
+      const targetX = GRADE_X_FROM + Math.min(realFraction, timeCeiling) * GRADE_X_SPAN
+      grade.x += (targetX - grade.x) * 0.12
+      applyGrade()
+
+      const ready = forced || assetsLoaded >= ASSET_TOTAL
+      if (!exited && ready && elapsed >= MIN_MS && GRADE_X_TO - grade.x < 1.2) {
+        finish()
+      }
+    }
+
+    applyGrade()
+    gsap.ticker.add(tick)
+
+    // Safety net: force the handoff if assets stall (never hang on the loader).
+    safety = setTimeout(() => {
+      forced = true
+      finish()
+    }, TIMEOUT_MS)
+
+    return () => {
+      gsap.ticker.remove(tick)
+      clearTimeout(safety)
+      clearTimeout(unmountFallback)
+      poster.onload = null
+      poster.onerror = null
+      gsap.killTweensOf([hud, backdrop])
+    }
   }, [onComplete, reducedMotion])
 
   if (!visible) return null
