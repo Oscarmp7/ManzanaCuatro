@@ -2,8 +2,10 @@
 .studio-hero {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  min-height: 100svh;
+  /* Tall and prominent, but short of full height so the About block peeks in
+     on entry — the reel + about read as one composition from the first frame. */
+  min-height: 75vh;
+  min-height: 75svh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -149,7 +151,7 @@
 
 @media (max-width: 600px) {
   .studio-hero {
-    min-height: 88vh;
-    min-height: 88svh;
+    min-height: 74vh;
+    min-height: 74svh;
   }
 }
