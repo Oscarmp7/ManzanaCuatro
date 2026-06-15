@@ -32,7 +32,7 @@
   text-transform: uppercase;
   letter-spacing: 0.01em;
   color: var(--text);
-  max-width: 18ch;
+  max-width: 30ch;
 }
 
 .studio-services__nav {
@@ -67,12 +67,16 @@
   color: #fff;
 }
 
-/* Scroller */
+/* Scroller — first/last card align with the centered content column (like the
+   header); cards bleed off-screen only while scrolling. On viewports narrower
+   than --layout-max the edge collapses to the normal layout padding. */
 .studio-services__scroller {
+  --edge: max(var(--layout-pad), calc((100% - var(--layout-max)) / 2 + var(--layout-pad)));
   display: flex;
   gap: 1.5rem;
   margin-top: clamp(2rem, 4vw, 3rem);
-  padding: 0.5rem var(--layout-pad);
+  padding: 0.5rem var(--edge);
+  scroll-padding-inline: var(--edge);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;

@@ -14,25 +14,44 @@ export default function StudioMarquee() {
 
   const { values, valuesAccent } = siteContent.studio
 
-  // Infinite marquee: constant base speed; scroll velocity accelerates/inverts it.
+  // Infinite marquee driven by a GSAP tween (robust under React StrictMode —
+  // the previous gsap.ticker.add inside gsap.context could end up with its tick
+  // removed on the StrictMode mount/cleanup cycle, freezing the strip).
+  // Scroll velocity briefly speeds it up, then it eases back to the base speed.
   useEffect(() => {
     if (reduced) return undefined
-    const ctx = gsap.context(() => {
-      const track = trackRef.current
-      if (!track) return undefined
-      const half = track.scrollWidth / 2
-      let x = 0
-      const tick = (time, deltaMs) => {
-        const factor = (deltaMs || 16.667) / 16.667
-        const scrollVel = ScrollTrigger.getVelocity() / 280
-        x += (-1.8 - scrollVel) * factor
-        x = gsap.utils.wrap(-half, 0, x)
-        track.style.transform = `translate3d(${x}px, 0, 0)`
-      }
-      gsap.ticker.add(tick)
-      return () => gsap.ticker.remove(tick)
-    }, rootRef)
-    return () => ctx.revert()
+    const track = trackRef.current
+    if (!track) return undefined
+
+    const half = track.scrollWidth / 2
+    if (!half) return undefined
+
+    const wrap = gsap.utils.wrap(-half, 0)
+    const tween = gsap.to(track, {
+      x: `-=${half}`,
+      duration: half / 110, // ~110px/s base speed
+      ease: 'none',
+      repeat: -1,
+      modifiers: { x: (value) => `${wrap(parseFloat(value))}px` },
+    })
+
+    let settle
+    const st = ScrollTrigger.create({
+      onUpdate: (self) => {
+        const velocity = self.getVelocity()
+        if (!velocity) return
+        tween.timeScale(gsap.utils.clamp(1, 6, 1 + Math.abs(velocity) / 300))
+        settle?.kill()
+        settle = gsap.to(tween, { timeScale: 1, duration: 0.8, ease: 'power2.out' })
+      },
+    })
+
+    return () => {
+      settle?.kill()
+      st.kill()
+      tween.kill()
+      gsap.set(track, { clearProps: 'transform' })
+    }
   }, [reduced])
 
   return (
