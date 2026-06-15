@@ -35,10 +35,11 @@ test('loader plays the grade reveal: log scene, mask wipe, colorist HUD and stag
   const loaderSource = readFileSync(new URL('../src/components/Loader/Loader.jsx', import.meta.url), 'utf8')
   const loaderCss = readFileSync(new URL('../src/components/Loader/Loader.css', import.meta.url), 'utf8')
 
-  // Title card mirrors the home brand card content
+  // Title card mirrors the home brand card content (wordmark + eyebrow). The
+  // CTA now lives ONLY in the loaded hero, never during the loader.
   assert.match(loaderSource, /siteContent\.brand\.name/)
   assert.match(loaderSource, /siteContent\.hero\.eyebrow/)
-  assert.match(loaderSource, /siteContent\.hero\.primaryCta\.label/)
+  assert.doesNotMatch(loaderSource, /primaryCta\.label/)
   assert.doesNotMatch(loaderSource, />M4</)
 
   // Grade reveal structure
@@ -47,7 +48,7 @@ test('loader plays the grade reveal: log scene, mask wipe, colorist HUD and stag
   assert.match(loaderSource, /--grade-x/)
   assert.match(loaderCss, /mask-image/)
   assert.match(loaderCss, /var\(--grade-x\)/)
-  assert.match(loaderCss, /\.loader__view/)
+  assert.doesNotMatch(loaderCss, /\.loader__view/) // CTA removed from the loader
   assert.match(loaderCss, /\.loader__grade-bar/)
 
   // Theme-safe: the stage never reads themable text/background tokens

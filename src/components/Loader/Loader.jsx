@@ -33,7 +33,7 @@ function TitleCard() {
     <div className="loader__title-card">
       <p className="loader__meta">{siteContent.hero.eyebrow}</p>
       <p className="loader__wordmark">{siteContent.brand.name}</p>
-      <span className="loader__view">{siteContent.hero.primaryCta.label}</span>
+      {/* No CTA during the load — it reveals only in the hero, once loaded. */}
     </div>
   )
 }
@@ -53,12 +53,21 @@ export default function Loader({ onComplete }) {
 
   useEffect(() => {
     if (reducedMotion) {
+      // No grade bar / HUD / morph: compose the hero underneath, then a short
+      // fade from the black backdrop onto the already-composed hero.
       if (!reducedMotionHandledRef.current) {
         reducedMotionHandledRef.current = true
         onComplete?.()
       }
 
-      return undefined
+      const fade = gsap.to(backdropRef.current, {
+        autoAlpha: 0,
+        duration: 0.4,
+        ease: 'power2.out',
+        onComplete: () => setVisible(false),
+      })
+
+      return () => fade.kill()
     }
 
     const grade = { x: GRADE_X_FROM }
@@ -122,7 +131,6 @@ export default function Loader({ onComplete }) {
     return () => tl.kill()
   }, [onComplete, reducedMotion])
 
-  if (reducedMotion) return null
   if (!visible) return null
 
   return (
@@ -130,36 +138,40 @@ export default function Loader({ onComplete }) {
       {/* Void backdrop — the only layer the reveal fades */}
       <div className="loader__backdrop" ref={backdropRef} />
 
-      {/* Graded scene (final state) */}
-      <div className="loader__scene">
-        <TitleCard />
-      </div>
+      {!reducedMotion && (
+        <>
+          {/* Graded scene (final state) */}
+          <div className="loader__scene">
+            <TitleCard />
+          </div>
 
-      {/* Log scene (raw state) — masked away by the grade wipe */}
-      <div className="loader__scene loader__scene--log" ref={logRef}>
-        <TitleCard />
-      </div>
+          {/* Log scene (raw state) — masked away by the grade wipe */}
+          <div className="loader__scene loader__scene--log" ref={logRef}>
+            <TitleCard />
+          </div>
 
-      {/* Colorist HUD */}
-      <div className="loader__hud" ref={hudRef}>
-        <div className="loader__hud-row">
-          <span ref={timecodeRef}>TC 00:00:00:00</span>
-          <span>LOG &#9656; REC.709</span>
-        </div>
-        <div className="loader__hud-row">
-          <span className="loader__hud-side">M4 &middot; Santo Domingo</span>
-          <span className="loader__grade" ref={gradeRef}>
-            <span className="loader__grade-label">Grade</span>
-            <span className="loader__grade-bar">
-              <span className="loader__grade-fill" ref={gradeFillRef} />
-            </span>
-            <span className="loader__grade-pct" ref={gradePctRef}>
-              0%
-            </span>
-          </span>
-          <span className="loader__hud-side">24 fps</span>
-        </div>
-      </div>
+          {/* Colorist HUD */}
+          <div className="loader__hud" ref={hudRef}>
+            <div className="loader__hud-row">
+              <span ref={timecodeRef}>TC 00:00:00:00</span>
+              <span>LOG &#9656; REC.709</span>
+            </div>
+            <div className="loader__hud-row">
+              <span className="loader__hud-side">M4 &middot; Santo Domingo</span>
+              <span className="loader__grade" ref={gradeRef}>
+                <span className="loader__grade-label">Grade</span>
+                <span className="loader__grade-bar">
+                  <span className="loader__grade-fill" ref={gradeFillRef} />
+                </span>
+                <span className="loader__grade-pct" ref={gradePctRef}>
+                  0%
+                </span>
+              </span>
+              <span className="loader__hud-side">24 fps</span>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
