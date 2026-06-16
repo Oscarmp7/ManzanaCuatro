@@ -147,15 +147,17 @@ export default function Loader({ onComplete }) {
       // identical brand title-card sits underneath at scale 1).
       gsap.to(root, { '--loader-title-settle': 1, duration: 0.6, ease: 'expo.out' })
       gsap.to(hud, { autoAlpha: 0, y: -6, duration: 0.35, ease: 'power1.in' })
+      // Open the void onto the reel with a smooth, even dissolve (not the
+      // front-loaded expo pop) so the video/photo fades up gradually.
       gsap.to(backdrop, {
         autoAlpha: 0,
-        duration: 0.95,
-        delay: 0.25,
-        ease: 'expo.out',
+        duration: 1.5,
+        delay: 0.15,
+        ease: 'power2.inOut',
         onComplete: () => setVisible(false),
       })
       // Hard fallback: always unmount even if the fade never ticks.
-      unmountFallback = setTimeout(() => setVisible(false), 1600)
+      unmountFallback = setTimeout(() => setVisible(false), 2300)
     }
 
     function tick() {
