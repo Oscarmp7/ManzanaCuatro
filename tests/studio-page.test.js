@@ -35,9 +35,10 @@ test('studio reel cursor: fine-pointer-gated lens with SVG ripple on the media',
   assert.match(cur, /feDisplacementMap/) // real image displacement, not an overlay
   assert.match(cur, /studio-reel-cursor__lens/)
   const css = read('../src/components/studio/StudioReelCursor.css')
-  // filter sits on the small lens-sized warp, not the full-size media (perf)
-  assert.match(css, /\.studio-reel-cursor__warp/)
+  // ripple on the static poster (filter cached once); slice offset via transform
+  // (compositor) — never left/top — so it stays fluid
   assert.match(css, /filter: url\(#studio-reel-ripple\)/)
+  assert.match(css, /translate3d/)
 })
 
 test('reel modal is a lazy, accessible custom player with scroll-lock', () => {

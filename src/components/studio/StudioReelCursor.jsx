@@ -7,15 +7,18 @@ import './StudioReelCursor.css'
 const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 
 /**
- * A reel "lens" that follows the cursor over the hero: a small circular window
- * showing the SAME hero media, rippled via an SVG displacement filter, so the
- * image itself appears to wave under the cursor. A "Ver reel" outline ring rides
- * on top. The filter is applied to a small (lens-sized) element, not the full
- * video, so the cost stays cheap.
+ * A reel "lens" that follows the cursor over the hero: a circular window showing
+ * the hero poster rippled via an SVG displacement filter, so the image appears
+ * to wave under the cursor. A "Ver reel" outline ring rides on top.
+ *
+ * Perf: the SVG filter is applied to a STATIC <img> (the reel poster), so the
+ * browser computes the displacement ONCE and caches the filtered layer. Both
+ * the lens and the slice offset move via `transform` only (compositor) — no
+ * per-frame layout, no per-frame filter re-rasterization (a live <video> under
+ * an SVG filter forces a GPU→CPU readback every frame, which is what stuttered).
  */
-export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
+export default function StudioReelCursor({ targetRef, media }) {
   const rootRef = useRef(null)
-  const lensVideoRef = useRef(null)
   const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
@@ -74,17 +77,6 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
       }
     }
     const onEnter = () => {
-      const bg = bgVideoRef && bgVideoRef.current
-      const lens = lensVideoRef.current
-      if (bg && lens) {
-        try {
-          lens.currentTime = bg.currentTime
-        } catch {
-          /* cross-loop drift is fine */
-        }
-        const p = lens.play()
-        if (p && p.catch) p.catch(() => {})
-      }
       firstMove = true
       target.classList.add('studio-hero--cursor-active')
       if (!raf) raf = requestAnimationFrame(render)
@@ -122,7 +114,7 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
       target.classList.remove('studio-hero--cursor-active')
       gsap.set(root, { autoAlpha: 0 })
     }
-  }, [enabled, targetRef, bgVideoRef])
+  }, [enabled, targetRef])
 
   if (!enabled) return null
 
@@ -136,19 +128,7 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
       </svg>
 
       <div className="studio-reel-cursor__lens">
-        <div className="studio-reel-cursor__warp">
-          <video
-            ref={lensVideoRef}
-            className="studio-reel-cursor__media"
-            src={media.ambientSrc}
-            poster={media.poster}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          />
-        </div>
+        <img className="studio-reel-cursor__media" src={media.poster} alt="" decoding="async" />
       </div>
 
       <div className="studio-reel-cursor__ring">
