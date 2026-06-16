@@ -127,13 +127,14 @@ export default function HomeReel({ ready = true, firstLoad = false }) {
 
     brandRevealedRef.current = true
     const ctx = gsap.context(() => {
+      // Gentle, gradual reveal that lands after the void backdrop has opened.
       gsap.from(targets, {
         autoAlpha: 0,
-        y: 14,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: 'expo.out',
-        delay: 0.5,
+        y: 10,
+        duration: 1.05,
+        stagger: 0.16,
+        ease: 'power2.out',
+        delay: 0.75,
       })
     })
     return () => ctx.revert()
