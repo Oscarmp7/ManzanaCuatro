@@ -92,7 +92,7 @@ export default function StudioHero() {
         </span>
       </div>
 
-      <StudioReelCursor targetRef={rootRef} media={reel} />
+      <StudioReelCursor targetRef={rootRef} bgVideoRef={videoRef} media={reel} />
 
       <ReelModal
         open={reelOpen}

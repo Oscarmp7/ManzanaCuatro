@@ -33,10 +33,14 @@
   overflow: hidden;
 }
 
-/* The ripple filter is applied to a STATIC poster <img>, so the displacement is
-   computed once and the filtered layer is cached. The slice offset moves via
-   transform only (compositor) — no per-frame layout, no per-frame filter
-   re-rasterization. */
+/* The filter lives on this small (lens-sized) element — cheap to compute —
+   while the media inside is hero-sized and offset to the cursor slice. */
+.studio-reel-cursor__warp {
+  position: absolute;
+  inset: 0;
+  filter: url(#studio-reel-ripple);
+}
+
 .studio-reel-cursor__media {
   position: absolute;
   top: 0;
@@ -44,12 +48,14 @@
   width: var(--hero-w, 100vw);
   height: var(--hero-h, 100vh);
   object-fit: cover;
+  /* Slice offset via transform (compositor-only) — NOT left/top, which forces
+     a layout + paint each frame. The ripple stays on the small warp (cheap). */
   transform: translate3d(
     calc(-1 * (var(--mx, 50%) - var(--lens-d) / 2)),
     calc(-1 * (var(--my, 50%) - var(--lens-d) / 2)),
     0
   );
-  filter: url(#studio-reel-ripple) saturate(1.05) contrast(1.04);
+  filter: saturate(1.05) contrast(1.04);
   will-change: transform;
 }
 
