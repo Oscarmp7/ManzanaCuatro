@@ -254,6 +254,7 @@
   border: 1px solid color-mix(in srgb, var(--stage-text) 55%, transparent);
   border-radius: 50%;
   background: color-mix(in srgb, #000 38%, transparent);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   transition:
     background-color 0.25s var(--ease-out),

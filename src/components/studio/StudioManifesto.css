@@ -6,7 +6,7 @@
   background: var(--bg);
   color: var(--text);
   /* Tighter top so the label + lead peek under the reel hero on entry */
-  padding: clamp(2rem, 4vw, 3rem) 0 clamp(5rem, 10vw, 8rem);
+  padding: clamp(1.25rem, 3vw, 2rem) 0 clamp(5rem, 10vw, 8rem);
 }
 
 .studio-manifesto__inner {

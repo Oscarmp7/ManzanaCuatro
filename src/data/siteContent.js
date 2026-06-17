@@ -162,8 +162,6 @@ export const siteContent = {
     title: 'Pasión por elevar marcas a través de los audiovisuales.',
     text:
       'Manzana Cuatro trabaja como aliado audiovisual para agencias, empresas, creadores y marcas que necesitan una producción cuidada, moderna y confiable sin pasar por estructuras pesadas.',
-    image:
-      'https://wol7zpzfeh2wdhnp.public.blob.vercel-storage.com/briefs/1773102078593-white.jpg',
     highlights: [
       'Contenido pensado para campañas y redes sociales.',
       'Ejecución ágil con estándar visual premium.',

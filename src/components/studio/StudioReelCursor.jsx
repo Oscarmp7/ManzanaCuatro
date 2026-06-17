@@ -145,7 +145,7 @@ export default function StudioReelCursor({ targetRef, bgVideoRef, media }) {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
             aria-hidden="true"
           />
         </div>

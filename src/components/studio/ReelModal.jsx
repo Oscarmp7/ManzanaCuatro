@@ -276,12 +276,17 @@ export default function ReelModal({ open, onClose, src, poster, title }) {
             aria-valuemin={0}
             aria-valuemax={Math.round(duration)}
             aria-valuenow={Math.round(current)}
+            aria-valuetext={`${fmt(current)} de ${fmt(duration)}`}
             tabIndex={0}
             onKeyDown={(e) => {
               const v = videoRef.current
               if (!v) return
+              if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return
+              e.preventDefault() // don't scroll the page while seeking
               if (e.key === 'ArrowRight') v.currentTime = Math.min(duration, v.currentTime + 5)
               if (e.key === 'ArrowLeft') v.currentTime = Math.max(0, v.currentTime - 5)
+              if (e.key === 'Home') v.currentTime = 0
+              if (e.key === 'End') v.currentTime = duration
             }}
           >
             <span className="reel-modal__track-fill" style={{ transform: `scaleX(${progress})` }} />

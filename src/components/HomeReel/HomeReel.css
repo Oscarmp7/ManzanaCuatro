@@ -114,6 +114,7 @@
 
 .home-reel__color-wash {
   background: color-mix(in srgb, var(--bg) 96%, transparent);
+  -webkit-backdrop-filter: blur(var(--color-wash-blur)) saturate(0.7);
   backdrop-filter: blur(var(--color-wash-blur)) saturate(0.7);
   opacity: var(--color-wash-opacity);
   will-change: opacity;
