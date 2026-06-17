@@ -52,7 +52,7 @@
 .footer__copyright {
   font-family: var(--font-hud);
   font-size: 0.7rem;
-  color: var(--text-dim);
+  color: var(--text-muted);
   margin-top: 1.5rem;
 }
 

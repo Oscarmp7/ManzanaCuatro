@@ -67,7 +67,10 @@ test('studio manifesto: MAJOR-style about — left label + two text columns', ()
   assert.match(m, /studio-manifesto__cols/) // two-column text block
   // reveal targets collected via refs (no global selectors)
   assert.match(m, /addReveal/)
-  assert.match(m, /ScrollTrigger/)
+  // reveals on entry (mount), not on scroll: the block peeks under the hero, so
+  // a scroll trigger would leave the visible label/lead stuck invisible on arrival
+  assert.match(m, /gsap\.from/)
+  assert.doesNotMatch(m, /scrollTrigger:/)
 
   const page = read('../src/pages/StudioPage.jsx')
   assert.match(page, /<h1 className="studio__sr-title">/)

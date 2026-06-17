@@ -21,7 +21,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--text) 58%, transparent);
+  color: color-mix(in srgb, var(--text) 72%, transparent);
 }
 
 .home-end__title {
@@ -95,7 +95,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--text) 58%, transparent);
+  color: color-mix(in srgb, var(--text) 80%, transparent);
 }
 
 .home-end__link {

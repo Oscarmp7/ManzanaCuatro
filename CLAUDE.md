@@ -34,9 +34,6 @@ src/
 │   ├── usePrefersReducedMotion.js  # Media query (prefers-reduced-motion)
 │   └── useHomeReelScroll.js   # GSAP ScrollTrigger logic extraída de HomeReel
 │
-├── utils/
-│   └── math.js                # clamp / lerp / mapRange
-│
 ├── layouts/
 │   └── MainLayout.jsx         # Envuelve todas las páginas: Nav + PageTransition + Footer
 │

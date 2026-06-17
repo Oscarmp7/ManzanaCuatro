@@ -242,6 +242,7 @@
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
   padding: 0.5rem 0 0;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid color-mix(in srgb, var(--separator) 58%, transparent);
 }
@@ -756,13 +757,11 @@
     flex-shrink: 0;
   }
 
-  .projects-showcase__case-frame,
-  .projects-showcase__block--pair .projects-showcase__case-frame {
+  .projects-showcase__case-frame {
     aspect-ratio: 4 / 3;
   }
 
-  .projects-showcase__case-title,
-  .projects-showcase__block--pair .projects-showcase__case-title {
+  .projects-showcase__case-title {
     font-size: clamp(2rem, 11vw, 3.5rem);
   }
 

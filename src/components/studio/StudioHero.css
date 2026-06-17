@@ -4,8 +4,8 @@
   width: 100%;
   /* Tall and prominent, but short of full height so the About block peeks in
      on entry — the reel + about read as one composition from the first frame. */
-  min-height: 75vh;
-  min-height: 75svh;
+  min-height: 68vh;
+  min-height: 68svh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -84,6 +84,28 @@
   padding: 0 var(--layout-pad);
 }
 
+/* Legibility scrim behind the wordmark: the bg overlay leaves the center clear,
+   so the cream wordmark can sit over a bright video subject and lose contrast.
+   A soft, focused halo lifts it in BOTH themes without darkening the whole reel
+   (functional, not decorative — the stage stays theme-independent). */
+.studio-hero__content::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(125%, 1180px);
+  height: min(135%, 620px);
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(5, 5, 5, 0.58) 0%,
+    rgba(5, 5, 5, 0.34) 42%,
+    transparent 72%
+  );
+}
+
 .studio-hero__title {
   display: block;
   overflow: hidden;
@@ -151,7 +173,7 @@
 
 @media (max-width: 600px) {
   .studio-hero {
-    min-height: 74vh;
-    min-height: 74svh;
+    min-height: 68vh;
+    min-height: 68svh;
   }
 }

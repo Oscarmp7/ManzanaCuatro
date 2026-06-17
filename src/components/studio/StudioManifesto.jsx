@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { siteContent } from '../../data/siteContent'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import './StudioManifesto.css'
@@ -17,6 +16,10 @@ export default function StudioManifesto() {
     if (el && !revealRefs.current.includes(el)) revealRefs.current.push(el)
   }
 
+  // The about block peeks under the reel hero on entry, so it reads as part of
+  // the same composition — it reveals on mount, not on scroll. A scroll trigger
+  // would leave the already-visible label/lead stuck invisible until the user
+  // scrolled past it (the peek would look empty on arrival).
   useEffect(() => {
     if (reduced) return undefined
     const ctx = gsap.context(() => {
@@ -27,7 +30,7 @@ export default function StudioManifesto() {
           duration: 0.8,
           ease: 'expo.out',
           stagger: 0.1,
-          scrollTrigger: { trigger: rootRef.current, start: 'top 74%', once: true },
+          delay: 0.2,
         })
       }
     }, rootRef)
